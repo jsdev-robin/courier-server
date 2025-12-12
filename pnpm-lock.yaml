@@ -358,6 +358,25 @@ importers:
 
   apps/gateway-e2e: {}
 
+  apps/parcel:
+    dependencies:
+      express:
+        specifier: ^4.21.2
+        version: 4.22.1
+      mongoose:
+        specifier: ^8.20.0
+        version: 8.20.0
+
+  apps/parcel-e2e: {}
+
+  apps/sync:
+    dependencies:
+      express:
+        specifier: ^4.21.2
+        version: 4.22.1
+
+  apps/sync-e2e: {}
+
   libs/cloud:
     dependencies:
       tslib:

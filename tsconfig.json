@@ -41,6 +41,18 @@
     },
     {
       "path": "./libs/upload"
+    },
+    {
+      "path": "./apps/parcel-e2e"
+    },
+    {
+      "path": "./apps/parcel"
+    },
+    {
+      "path": "./apps/sync-e2e"
+    },
+    {
+      "path": "./apps/sync"
     }
   ]
 }

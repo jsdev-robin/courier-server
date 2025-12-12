@@ -12,7 +12,7 @@ export type Role =
   | 'finance'
   | 'marketing'
   | 'agent'
-  | 'buyer';
+  | 'user';
 
 export interface ISession {
   token?: string;

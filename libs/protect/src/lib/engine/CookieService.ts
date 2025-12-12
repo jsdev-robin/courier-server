@@ -10,10 +10,9 @@ import {
   COOKIE_ADMIN_PROTECT,
   COOKIE_ADMIN_REFRESH,
   COOKIE_AGENT_ACCESS,
-  COOKIE_BUYER_ACCESS,
-  COOKIE_BUYER_PENDING_2FA,
-  COOKIE_BUYER_PROTECT,
-  COOKIE_BUYER_REFRESH,
+  COOKIE_AGENT_PENDING_2FA,
+  COOKIE_AGENT_PROTECT,
+  COOKIE_AGENT_REFRESH,
   COOKIE_FINANCE_ACCESS,
   COOKIE_FINANCE_PENDING_2FA,
   COOKIE_FINANCE_PROTECT,
@@ -28,9 +27,6 @@ import {
   COOKIE_OPERATIONS_REFRESH,
   COOKIE_OPTIONS_HTTP,
   COOKIE_OPTIONS_NOT_HTTP,
-  COOKIE_SELLER_PENDING_2FA,
-  COOKIE_SELLER_PROTECT,
-  COOKIE_SELLER_REFRESH,
   COOKIE_SUPERADMIN_ACCESS,
   COOKIE_SUPERADMIN_PENDING_2FA,
   COOKIE_SUPERADMIN_PROTECT,
@@ -39,6 +35,10 @@ import {
   COOKIE_SUPPORT_PENDING_2FA,
   COOKIE_SUPPORT_PROTECT,
   COOKIE_SUPPORT_REFRESH,
+  COOKIE_USER_ACCESS,
+  COOKIE_USER_PENDING_2FA,
+  COOKIE_USER_PROTECT,
+  COOKIE_USER_REFRESH,
   PROTECT_COOKIE_EXP,
   REFRESH_COOKIE_EXP,
 } from './constants.js';
@@ -55,8 +55,8 @@ export class CookieService {
   protected getCookieNames() {
     return {
       access:
-        this.role === 'buyer'
-          ? COOKIE_BUYER_ACCESS
+        this.role === 'user'
+          ? COOKIE_USER_ACCESS
           : this.role === 'agent'
           ? COOKIE_AGENT_ACCESS
           : this.role === 'superadmin'
@@ -74,10 +74,10 @@ export class CookieService {
           : 'A1',
 
       refresh:
-        this.role === 'buyer'
-          ? COOKIE_BUYER_REFRESH
+        this.role === 'user'
+          ? COOKIE_USER_REFRESH
           : this.role === 'agent'
-          ? COOKIE_SELLER_REFRESH
+          ? COOKIE_AGENT_REFRESH
           : this.role === 'superadmin'
           ? COOKIE_SUPERADMIN_REFRESH
           : this.role === 'admin'
@@ -93,10 +93,10 @@ export class CookieService {
           : 'A2',
 
       protect:
-        this.role === 'buyer'
-          ? COOKIE_BUYER_PROTECT
+        this.role === 'user'
+          ? COOKIE_USER_PROTECT
           : this.role === 'agent'
-          ? COOKIE_SELLER_PROTECT
+          ? COOKIE_AGENT_PROTECT
           : this.role === 'superadmin'
           ? COOKIE_SUPERADMIN_PROTECT
           : this.role === 'admin'
@@ -112,10 +112,10 @@ export class CookieService {
           : 'A3',
 
       pending2FA:
-        this.role === 'buyer'
-          ? COOKIE_BUYER_PENDING_2FA
+        this.role === 'user'
+          ? COOKIE_USER_PENDING_2FA
           : this.role === 'agent'
-          ? COOKIE_SELLER_PENDING_2FA
+          ? COOKIE_AGENT_PENDING_2FA
           : this.role === 'superadmin'
           ? COOKIE_SUPERADMIN_PENDING_2FA
           : this.role === 'admin'

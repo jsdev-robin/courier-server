@@ -3,7 +3,7 @@ import { compare, hash } from 'bcryptjs';
 import { model, Model, Schema } from 'mongoose';
 import { SessionSchema } from './schemas/sessionSchema.js';
 
-const BuyerSchema = new Schema<IUser>(
+const UserSchema = new Schema<IUser>(
   {
     personalInfo: {
       familyName: { type: String },
@@ -96,7 +96,7 @@ const BuyerSchema = new Schema<IUser>(
     },
     role: {
       type: String,
-      default: 'buyer',
+      default: 'user',
       required: true,
       immutable: true,
     },
@@ -132,11 +132,11 @@ const BuyerSchema = new Schema<IUser>(
   }
 );
 
-BuyerSchema.virtual('personalInfo.displayName').get(function (this: IUser) {
+UserSchema.virtual('personalInfo.displayName').get(function (this: IUser) {
   return `${this.personalInfo.familyName} ${this.personalInfo.givenName}`.trim();
 });
 
-BuyerSchema.pre<IUser>('save', async function () {
+UserSchema.pre<IUser>('save', async function () {
   if (!this.isModified('authentication.password')) return;
   this.authentication.password = await hash(
     String(this.authentication.password),
@@ -144,11 +144,11 @@ BuyerSchema.pre<IUser>('save', async function () {
   );
 });
 
-BuyerSchema.methods.isPasswordValid = async function (
+UserSchema.methods.isPasswordValid = async function (
   this: IUser,
   candidatePassword: string
 ): Promise<boolean> {
   return await compare(candidatePassword, this.authentication.password ?? '');
 };
 
-export const Buyer: Model<IUser> = model<IUser>('Buyer', BuyerSchema);
+export const User: Model<IUser> = model<IUser>('User', UserSchema);

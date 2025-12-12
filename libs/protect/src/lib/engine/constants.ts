@@ -100,12 +100,12 @@ export const COOKIE_MARKETING_PENDING_2FA = 'xma3cd5';
 
 // Seller cookies
 export const COOKIE_AGENT_ACCESS = 'xa91fe7';
-export const COOKIE_SELLER_REFRESH = 'xa92be3';
-export const COOKIE_SELLER_PROTECT = 'xa93cd4';
-export const COOKIE_SELLER_PENDING_2FA = 'xa93cd5';
+export const COOKIE_AGENT_REFRESH = 'xa92be3';
+export const COOKIE_AGENT_PROTECT = 'xa93cd4';
+export const COOKIE_AGENT_PENDING_2FA = 'xa93cd5';
 
 // Buyer cookies
-export const COOKIE_BUYER_ACCESS = 'xd91fe7';
-export const COOKIE_BUYER_REFRESH = 'xd92be3';
-export const COOKIE_BUYER_PROTECT = 'xd93cd4';
-export const COOKIE_BUYER_PENDING_2FA = 'xd93cd5';
+export const COOKIE_USER_ACCESS = 'xd91fe7';
+export const COOKIE_USER_REFRESH = 'xd92be3';
+export const COOKIE_USER_PROTECT = 'xd93cd4';
+export const COOKIE_USER_PENDING_2FA = 'xd93cd5';
