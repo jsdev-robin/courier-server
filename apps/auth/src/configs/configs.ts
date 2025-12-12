@@ -9,7 +9,6 @@ dotenv.config({
 
 const requiredVars: Array<keyof ProcessEnv> = [
   'NODE_ENV',
-  'GATEWAY_PORT',
   'AUTH_PORT',
 
   // Database
@@ -98,7 +97,6 @@ validateEnv(env);
 
 const defaults: Partial<ProcessEnv> = {
   NODE_ENV: 'development',
-  GATEWAY_PORT: '8001',
   AUTH_PORT: '8002',
 };
 
@@ -112,7 +110,7 @@ const config: ProcessEnv & { ISPRODUCTION: boolean; DB: string } = {
           '<db_password>',
           env.DATABASE_PASSWORD_ONLINE
         )
-      : 'mongodb://127.0.0.1/munza',
+      : 'mongodb://127.0.0.1/courier',
 };
 
 export { config };
