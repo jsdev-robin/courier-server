@@ -402,6 +402,9 @@ importers:
       express:
         specifier: ^4.21.2
         version: 4.22.1
+      express-validator:
+        specifier: ^7.3.1
+        version: 7.3.1
       jsonwebtoken:
         specifier: ^9.0.3
         version: 9.0.3
