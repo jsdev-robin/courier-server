@@ -1,0 +1,25 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "files": [],
+  "include": [],
+  "references": [
+    {
+      "path": "../utils"
+    },
+    {
+      "path": "../types"
+    },
+    {
+      "path": "../security"
+    },
+    {
+      "path": "../middlewares"
+    },
+    {
+      "path": "../cloud"
+    },
+    {
+      "path": "./tsconfig.lib.json"
+    }
+  ]
+}

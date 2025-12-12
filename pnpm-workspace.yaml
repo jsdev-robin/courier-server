@@ -1,0 +1,11 @@
+packages:
+  - 'apps/*'
+  - 'libs/utils'
+  - 'libs/types'
+  - 'libs/security'
+  - 'libs/protect'
+  - 'libs/emails'
+  - 'libs/middlewares'
+  - 'libs/cloud'
+  - 'libs/validations'
+  - 'libs/upload'

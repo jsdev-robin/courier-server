@@ -1,0 +1,46 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compileOnSave": false,
+  "files": [],
+  "references": [
+    {
+      "path": "./apps/gateway-e2e"
+    },
+    {
+      "path": "./apps/gateway"
+    },
+    {
+      "path": "./apps/auth-e2e"
+    },
+    {
+      "path": "./apps/auth"
+    },
+    {
+      "path": "./libs/utils"
+    },
+    {
+      "path": "./libs/types"
+    },
+    {
+      "path": "./libs/security"
+    },
+    {
+      "path": "./libs/protect"
+    },
+    {
+      "path": "./libs/emails"
+    },
+    {
+      "path": "./libs/middlewares"
+    },
+    {
+      "path": "./libs/cloud"
+    },
+    {
+      "path": "./libs/validations"
+    },
+    {
+      "path": "./libs/upload"
+    }
+  ]
+}

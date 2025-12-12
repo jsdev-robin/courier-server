@@ -1,0 +1,40 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "files": [],
+  "include": [],
+  "references": [
+    {
+      "path": "../../libs/upload"
+    },
+    {
+      "path": "../../libs/validations"
+    },
+    {
+      "path": "../../libs/utils"
+    },
+    {
+      "path": "../../libs/types"
+    },
+    {
+      "path": "../../libs/security"
+    },
+    {
+      "path": "../../libs/protect"
+    },
+    {
+      "path": "../../libs/middlewares"
+    },
+    {
+      "path": "../../libs/emails"
+    },
+    {
+      "path": "../../libs/cloud"
+    },
+    {
+      "path": "./tsconfig.app.json"
+    },
+    {
+      "path": "./tsconfig.spec.json"
+    }
+  ]
+}
