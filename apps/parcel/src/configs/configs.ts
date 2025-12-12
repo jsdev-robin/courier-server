@@ -9,7 +9,7 @@ dotenv.config({
 
 const requiredVars: Array<keyof ProcessEnv> = [
   'NODE_ENV',
-  'AUTH_PORT',
+  'PARCEL_PORT',
 
   // Database
   'DATABASE_ONLINE',
@@ -22,61 +22,21 @@ const requiredVars: Array<keyof ProcessEnv> = [
   'UPSTASH_REDIS_REST_URL',
   'UPSTASH_REDIS_REST_TOKEN',
 
-  // Cloudinary
-  'CLOUD_NAME',
-  'CLOUD_API_KEY',
-  'CLOUD_API_SECRET',
-  'CLOUDINARY_URL',
-
-  // Kafka
-  'KAFKA_BROKERS',
-  'KAFKA_USERNAME',
-  'KAFKA_PASSWORD',
-
   // Security & Auth
-  'IPINFO_KEY',
   'COOKIE_SECRET',
   'ACTIVATION_SECRET',
   'CRYPTO_SECRET',
   'HMAC_SECRET',
-  'EMAIL_CHANGE_SECRET',
 
   // Tokens
   'ACCESS_TOKEN',
   'REFRESH_TOKEN',
   'PROTECT_TOKEN',
 
-  // Email
-  'EMAIL_USERNAME',
-  'EMAIL_PASSWORD',
-  'EMAIL_HOST',
-  'EMAIL_PORT',
-  'EMAIL_FROM',
-
-  // OAuth / Social logins
-  'GOOGLE_CLIENT_ID',
-  'GOOGLE_CLIENT_SECRET',
-  'GITHUB_CLIENT_ID',
-  'GITHUB_CLIENT_SECRET',
-  'FACEBOOK_CLIENT_ID',
-  'FACEBOOK_CLIENT_SECRET',
-  'CONSUMER_KEY',
-  'CONSUMER_SECRET',
-  'DISCORD_CLIENT_ID',
-  'DISCORD_CLIENT_SECRET',
-
   // Client URLs
   'WEB_CLIENT_URL',
   'ADMIN_CLIENT_URL',
   'AGENT_CLIENT_URL',
-
-  // RP (Relying Party)
-  'RP_NAME',
-  'RP_ID',
-
-  // Server & API
-  'AUTH_SERVER_ORIGIN',
-  'GEMINI_KEY',
 ];
 
 function validateEnv(env: ProcessEnv) {
@@ -94,7 +54,7 @@ validateEnv(env);
 
 const defaults: Partial<ProcessEnv> = {
   NODE_ENV: 'development',
-  AUTH_PORT: '8002',
+  PARCEL_PORT: '8003',
 };
 
 const config: ProcessEnv & { ISPRODUCTION: boolean; DB: string } = {

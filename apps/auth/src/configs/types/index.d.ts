@@ -42,9 +42,6 @@ export interface ProcessEnv {
   ACCESS_TOKEN: string;
   REFRESH_TOKEN: string;
   PROTECT_TOKEN: string;
-  ACCESS_TOKEN_EXPIRE: string;
-  REFRESH_TOKEN_EXPIRE: string;
-  PROTECT_TOKEN_EXPIRE: string;
 
   // Email
   EMAIL_USERNAME: string;

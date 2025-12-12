@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "pnpx nx run-many --target=serve --all",
-    "dev:app": "pnpx nx run-many --target=serve --projects=gateway,auth",
+    "dev:app": "pnpx nx run-many --target=serve --projects=gateway,auth,parcel",
     "dev:web": "pnpx nx run-many --target=serve --projects=gateway,products",
     "dev:gateway": "pnpx nx run-many --target=serve --projects=gateway",
     "dev:auth": "pnpx nx run-many --target=serve --projects=auth",

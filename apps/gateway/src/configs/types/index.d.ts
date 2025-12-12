@@ -2,8 +2,8 @@ export interface ProcessEnv {
   // Server
   NODE_ENV: 'development' | 'production';
   GATEWAY_PORT: string;
-  AUTH_PORT: string;
   AUTH_GATEWAY: string;
+  PARCEL_GATEWAY: string;
 
   COOKIE_SECRET: string;
 

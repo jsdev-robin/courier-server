@@ -4,48 +4,36 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { Application, NextFunction, Request, Response } from 'express';
-import proxy from 'express-http-proxy';
-import rateLimit from 'express-rate-limit';
-import helmet from 'helmet';
 import morgan from 'morgan';
 import { config } from './configs/configs';
 
 const app: Application = express();
 
-// Dev logging
+// Development logging
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
+// Set the view engine to EJS
+app.set('view engine', 'ejs');
+
+// Proxy middleware
 app.set('trust proxy', 1);
-app.use(helmet());
 
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 10000,
-  standardHeaders: 'draft-7',
-  legacyHeaders: false,
-  handler: (_req, _res, next) => {
-    next(
-      new ApiError(
-        'Too many requests, please try again later.',
-        HttpStatusCode.TOO_MANY_REQUESTS
-      )
-    );
-  },
-});
+// Parse request bodies
+app.use(bodyParser.json({ limit: '5mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '5mb' }));
 
-app.use(limiter);
-app.use(bodyParser.json({ limit: '50mb' }));
-app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
+// Parse cookies
 app.use(cookieParser(config.COOKIE_SECRET));
 
+// Configure Cross-Origin Resource Sharing (CORS)
 app.use(
   cors({
     origin: [
       config.WEB_CLIENT_URL,
-      config.ADMIN_CLIENT_URL,
       config.AGENT_CLIENT_URL,
+      config.ADMIN_CLIENT_URL,
     ],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
@@ -56,18 +44,15 @@ app.use(
 app.get('/', async (req, res) => {
   res.status(200).json({
     status: 'success',
-    message: '🚀 Welcome to Gateway! Your API is running perfectly.',
+    message: '🚀 Welcome to Parcel! Your API is running perfectly.',
     timestamp: new Date().toISOString(),
-
-    client: {
-      ip: req.ip,
-    },
+    uptimeSeconds: process.uptime(),
+    environment: config.NODE_ENV,
+    version: '1.0.0',
   });
 });
 
-app.use('/api/v1/auth', proxy(config.AUTH_GATEWAY));
-app.use('/api/v1/parcel', proxy(config.PARCEL_GATEWAY));
-
+// Handle 404 errors
 app.all(/(.*)/, (req: Request, res: Response, next: NextFunction) => {
   return next(
     new ApiError(
@@ -77,6 +62,7 @@ app.all(/(.*)/, (req: Request, res: Response, next: NextFunction) => {
   );
 });
 
+// Global error handling middleware
 app.use(globalErrorHandler);
 
 export default app;

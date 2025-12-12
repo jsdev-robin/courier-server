@@ -1,30 +1,14 @@
 import { CookieOptions } from 'express';
 
-export const ACCESS_TTL: number = parseInt(
-  process.env.ACCESS_TOKEN_EXPIRE ?? '30',
-  10
-);
-
-export const REFRESH_TTL: number = parseInt(
-  process.env.REFRESH_TOKEN_EXPIRE ?? '3',
-  10
-);
-
-export const PROTECT_TTL: number = parseInt(
-  process.env.PROTECT_TOKEN_EXPIRE ?? '3',
-  10
-);
+export const ACCESS_TTL: number = 30;
+export const REFRESH_TTL: number = 3;
+export const PROTECT_TTL: number = 3;
 
 // 30 min
 export const ACCESS_COOKIE_EXP = {
   expires: new Date(Date.now() + ACCESS_TTL * 60 * 1000),
   maxAge: ACCESS_TTL * 60 * 1000,
 };
-
-// export const ACCESS_COOKIE_EXP = {
-//   expires: new Date(Date.now() + 10 * 1000),
-//   maxAge: 10 * 1000,
-// };
 
 // 3 days
 export const REFRESH_COOKIE_EXP = {
@@ -51,7 +35,7 @@ export const COOKIE_OPTIONS_HTTP: CookieOptions = {
   sameSite: 'none',
   secure: true,
   path: '/',
-  domain: process.env.ISPRODUCTION ? '.devmun.xyz' : 'localhost',
+  domain: '.devmun.xyz',
 };
 
 export const COOKIE_OPTIONS_NOT_HTTP: CookieOptions = {
@@ -59,7 +43,7 @@ export const COOKIE_OPTIONS_NOT_HTTP: CookieOptions = {
   sameSite: 'none',
   secure: true,
   path: '/',
-  domain: process.env.ISPRODUCTION ? '.devmun.xyz' : 'localhost',
+  domain: '.devmun.xyz',
 };
 
 // Superadmin cookies

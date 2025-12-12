@@ -10,11 +10,11 @@ dotenv.config({
 const requiredVars: Array<keyof ProcessEnv> = [
   'NODE_ENV',
   'GATEWAY_PORT',
-  'AUTH_PORT',
   'COOKIE_SECRET',
   'WEB_CLIENT_URL',
   'ADMIN_CLIENT_URL',
   'AUTH_GATEWAY',
+  'PARCEL_GATEWAY',
 ];
 
 function validateEnv(env: ProcessEnv) {
@@ -33,7 +33,6 @@ validateEnv(env);
 const defaults: Partial<ProcessEnv> = {
   NODE_ENV: 'development',
   GATEWAY_PORT: '8001',
-  AUTH_PORT: '8002',
 };
 
 const config: ProcessEnv & { ISPRODUCTION: boolean } = {

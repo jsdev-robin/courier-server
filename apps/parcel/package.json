@@ -103,7 +103,25 @@
     }
   },
   "dependencies": {
+    "@server/cloud": "workspace:*",
+    "@server/emails": "workspace:*",
+    "@server/middlewares": "workspace:*",
+    "@server/protect": "workspace:*",
+    "@server/types": "workspace:*",
+    "@server/utils": "workspace:*",
+    "body-parser": "^2.2.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
     "express": "^4.21.2",
-    "mongoose": "^8.20.0"
+    "mongoose": "^8.20.0",
+    "morgan": "^1.10.1",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.19.6",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
+    "@types/morgan": "^1.9.10"
   }
 }
