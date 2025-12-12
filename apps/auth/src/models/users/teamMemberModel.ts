@@ -1,11 +1,6 @@
 import { IUser } from '@server/types';
 import { compare, hash } from 'bcryptjs';
-import {
-  CallbackWithoutResultAndOptionalError,
-  model,
-  Model,
-  Schema,
-} from 'mongoose';
+import { model, Model, Schema } from 'mongoose';
 import { SessionSchema } from './schemas/sessionSchema.js';
 
 const TeamMemberSchema = new Schema<IUser>(
@@ -145,21 +140,13 @@ TeamMemberSchema.virtual('personalInfo.displayName').get(function (
   return `${this.personalInfo.familyName} ${this.personalInfo.givenName}`.trim();
 });
 
-TeamMemberSchema.pre(
-  'save',
-  async function (next: CallbackWithoutResultAndOptionalError) {
-    try {
-      if (!this.isModified('authentication.password')) return next();
-      this.authentication.password = await hash(
-        String(this.authentication.password),
-        12
-      );
-      next();
-    } catch (error: unknown) {
-      next(error as Error);
-    }
-  }
-);
+TeamMemberSchema.pre<IUser>('save', async function () {
+  if (!this.isModified('authentication.password')) return;
+  this.authentication.password = await hash(
+    String(this.authentication.password),
+    12
+  );
+});
 
 TeamMemberSchema.methods.isPasswordValid = async function (
   this: IUser,

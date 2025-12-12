@@ -19,6 +19,6 @@
   },
   "devDependencies": {
     "@server/security": "workspace:*",
-    "mongoose": "8.20.0"
+    "mongoose": "^8.20.0"
   }
 }
