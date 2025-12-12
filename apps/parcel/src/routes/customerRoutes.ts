@@ -1,4 +1,4 @@
-import { validationRequest } from '@server/validations';
+import { validation, validationRequest } from '@server/validations';
 import express, { Router } from 'express';
 import { customerParcelController } from '../controllers/customerParcelController';
 import { userProtect } from '../controllers/protectController';
@@ -18,6 +18,11 @@ router
     parcelValidator.create,
     validationRequest,
     customerParcelController.create
-  );
+  )
+  .get(customerParcelController.find);
+
+router
+  .route('/:id')
+  .get(validation.id, validationRequest, customerParcelController.findOne);
 
 export default router;

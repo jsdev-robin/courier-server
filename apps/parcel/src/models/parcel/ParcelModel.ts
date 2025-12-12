@@ -1,4 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
+import '../register/agentRegister';
 import { coordinatesSchema } from './schemas/coordinatesSchema';
 import {
   ParcelStatus,
@@ -32,7 +33,7 @@ const parcelSchema = new Schema<IParcel>(
 
     assignedAgent: {
       type: Schema.Types.ObjectId,
-      ref: 'Teammember',
+      ref: 'Agent',
     },
 
     pickupAddress: {

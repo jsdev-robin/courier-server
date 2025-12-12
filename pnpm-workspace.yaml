@@ -9,3 +9,4 @@ packages:
   - 'libs/cloud'
   - 'libs/validations'
   - 'libs/upload'
+  - 'libs/features'
