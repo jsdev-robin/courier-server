@@ -143,8 +143,7 @@ export class CookieService {
           : type === 'refresh'
           ? REFRESH_COOKIE_EXP
           : type === 'pending2FA'
-          ? // ? {ENABLE2FA_COOKIE_EXP}
-            {}
+          ? {}
           : PROTECT_COOKIE_EXP,
       options:
         type === 'protect' ? COOKIE_OPTIONS_NOT_HTTP : COOKIE_OPTIONS_HTTP,

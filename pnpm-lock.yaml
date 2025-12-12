@@ -361,7 +361,7 @@ importers:
   apps/parcel:
     dependencies:
       '@server/cloud':
-        specifier: workspace:*
+        specifier: workspace:^
         version: link:../../libs/cloud
       '@server/emails':
         specifier: workspace:*
@@ -378,9 +378,18 @@ importers:
       '@server/utils':
         specifier: workspace:*
         version: link:../../libs/utils
+      '@server/validations':
+        specifier: workspace:*
+        version: link:../../libs/validations
+      '@upstash/redis':
+        specifier: ^1.35.7
+        version: 1.35.7
       body-parser:
         specifier: ^2.2.1
         version: 2.2.1
+      bwip-js:
+        specifier: ^4.8.0
+        version: 4.8.0
       cookie-parser:
         specifier: ^1.4.7
         version: 1.4.7
@@ -393,12 +402,24 @@ importers:
       express:
         specifier: ^4.21.2
         version: 4.22.1
+      jsonwebtoken:
+        specifier: ^9.0.3
+        version: 9.0.3
       mongoose:
         specifier: ^8.20.0
         version: 8.20.0
       morgan:
         specifier: ^1.10.1
         version: 1.10.1
+      nanoid:
+        specifier: ^5.1.6
+        version: 5.1.6
+      qrcode:
+        specifier: ^1.5.4
+        version: 1.5.4
+      redis:
+        specifier: ^5.10.0
+        version: 5.10.0
       socket.io:
         specifier: ^4.8.1
         version: 4.8.1
@@ -412,9 +433,15 @@ importers:
       '@types/cors':
         specifier: ^2.8.19
         version: 2.8.19
+      '@types/jsonwebtoken':
+        specifier: ^9.0.10
+        version: 9.0.10
       '@types/morgan':
         specifier: ^1.9.10
         version: 1.9.10
+      '@types/qrcode':
+        specifier: ^1.5.6
+        version: 1.5.6
 
   apps/parcel-e2e: {}
 
@@ -2663,6 +2690,10 @@ packages:
     resolution: {integrity: sha512-8SFQbg/0hQ9xy3UNTB0YEnsNBbWfhf7RtnzpL7TkBiTBRfrQ9Fxcnz7VJsleJpyp6rVLvXiuORqjlHi5q+PYuA==}
     engines: {node: '>=10.16.0'}
 
+  bwip-js@4.8.0:
+    resolution: {integrity: sha512-gUDkDHSTv8/DJhomSIbO0fX/Dx0MO/sgllLxJyJfu4WixCQe9nfGJzmHm64ZCbxo+gUYQEsQcRmqcwcwPRwUkg==}
+    hasBin: true
+
   bytes@3.1.2:
     resolution: {integrity: sha512-/Nf7TyzTx6S3yRJObOAV7956r8cr2+Oj8AC5dt8wSP3BQAoeX58NoHyCU8P8zGkNXStjTSi6fzO6F0pBdcYbEg==}
     engines: {node: '>= 0.8'}
@@ -3883,6 +3914,11 @@ packages:
   multer@2.0.2:
     resolution: {integrity: sha512-u7f2xaZ/UG8oLXHvtF/oWTRvT44p9ecwBBqTwgJVq0+4BW1g8OW01TyMEGWBHbyMOYVHXslaut7qEQ1meATXgw==}
     engines: {node: '>= 10.16.0'}
+
+  nanoid@5.1.6:
+    resolution: {integrity: sha512-c7+7RQ+dMB5dPwwCp4ee1/iV/q2P6aK1mTZcfr1BTuVlyW9hJYiMPybJCcnBlQtuSmTIWNeazm/zqNoZSSElBg==}
+    engines: {node: ^18 || >=20}
+    hasBin: true
 
   napi-postinstall@0.3.4:
     resolution: {integrity: sha512-PHI5f1O0EP5xJ9gQmFGMS6IZcrVvTjpXjz7Na41gTE7eE2hK11lg04CECCYEEjdc17EV4DO+fkGEtt7TpTaTiQ==}
@@ -7743,6 +7779,8 @@ snapshots:
     dependencies:
       streamsearch: 1.1.0
 
+  bwip-js@4.8.0: {}
+
   bytes@3.1.2: {}
 
   call-bind-apply-helpers@1.0.2:
@@ -9129,6 +9167,8 @@ snapshots:
       object-assign: 4.1.1
       type-is: 1.6.18
       xtend: 4.0.2
+
+  nanoid@5.1.6: {}
 
   napi-postinstall@0.3.4: {}
 

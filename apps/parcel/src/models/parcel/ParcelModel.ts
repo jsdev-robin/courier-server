@@ -1,14 +1,27 @@
 import mongoose, { Schema } from 'mongoose';
 import { coordinatesSchema } from './schemas/coordinatesSchema';
-import { trackingHistorySchema } from './schemas/trackingHistorySchema';
-import { IParcel, ParcelSize, ParcelStatus, PaymentType } from './types';
+import {
+  ParcelStatus,
+  trackingHistorySchema,
+} from './schemas/trackingHistorySchema';
+import { IParcel } from './types';
+
+enum ParcelSize {
+  SMALL = 'Small',
+  MEDIUM = 'Medium',
+  LARGE = 'Large',
+}
+
+enum PaymentType {
+  COD = 'COD',
+  PREPAID = 'Prepaid',
+}
 
 const parcelSchema = new Schema<IParcel>(
   {
     trackingNumber: {
       type: String,
-      unique: true,
-      default: () => `PARCEL${Date.now()}${Math.floor(Math.random() * 1000)}`,
+      required: true,
     },
 
     customer: {
@@ -19,7 +32,7 @@ const parcelSchema = new Schema<IParcel>(
 
     assignedAgent: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: 'Teammember',
     },
 
     pickupAddress: {

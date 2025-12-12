@@ -1,6 +1,15 @@
 import { Schema } from 'mongoose';
-import { ITrackingHistory, ParcelStatus } from '../types';
+import { ITrackingHistory } from '../types';
 import { coordinatesSchema } from './coordinatesSchema';
+
+export enum ParcelStatus {
+  BOOKED = 'Booked',
+  ASSIGNED = 'Assigned',
+  PICKED_UP = 'Picked Up',
+  IN_TRANSIT = 'In Transit',
+  DELIVERED = 'Delivered',
+  FAILED = 'Failed',
+}
 
 export const trackingHistorySchema = new Schema<ITrackingHistory>(
   {

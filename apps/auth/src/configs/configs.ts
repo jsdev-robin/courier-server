@@ -28,11 +28,6 @@ const requiredVars: Array<keyof ProcessEnv> = [
   'CLOUD_API_SECRET',
   'CLOUDINARY_URL',
 
-  // Kafka
-  'KAFKA_BROKERS',
-  'KAFKA_USERNAME',
-  'KAFKA_PASSWORD',
-
   // Security & Auth
   'IPINFO_KEY',
   'COOKIE_SECRET',
@@ -76,7 +71,6 @@ const requiredVars: Array<keyof ProcessEnv> = [
 
   // Server & API
   'AUTH_SERVER_ORIGIN',
-  'GEMINI_KEY',
 ];
 
 function validateEnv(env: ProcessEnv) {

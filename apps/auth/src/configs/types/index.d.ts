@@ -20,28 +20,8 @@ export interface ProcessEnv {
   CLOUD_API_SECRET: string;
   CLOUDINARY_URL: string;
 
-  // Kafka
-  KAFKA_BROKERS: string;
-  KAFKA_USERNAME: string;
-  KAFKA_PASSWORD: string;
-
   // IP Request
   IPINFO_KEY: string;
-
-  // Secrets & Encryption
-  COOKIE_SECRET: string;
-  ACTIVATION_SECRET: string;
-  CRYPTO_SECRET: string;
-  HMAC_SECRET: string;
-  EMAIL_CHANGE_SECRET: string;
-  ALGORITHM: string;
-  KEY_LENGTH: string;
-  IV_LENGTH: string;
-
-  // Auth Tokens
-  ACCESS_TOKEN: string;
-  REFRESH_TOKEN: string;
-  PROTECT_TOKEN: string;
 
   // Email
   EMAIL_USERNAME: string;
@@ -81,5 +61,14 @@ export interface ProcessEnv {
 
   AUTH_SERVER_ORIGIN: string;
 
-  GEMINI_KEY: string;
+  EMAIL_CHANGE_SECRET: string;
+
+  // Secrets & Encryption
+  COOKIE_SECRET: string;
+  ACTIVATION_SECRET: string;
+  CRYPTO_SECRET: string;
+  HMAC_SECRET: string;
+  ACCESS_TOKEN: string;
+  REFRESH_TOKEN: string;
+  PROTECT_TOKEN: string;
 }

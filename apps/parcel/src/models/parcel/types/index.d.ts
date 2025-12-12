@@ -1,25 +1,5 @@
 import { Document, Types } from 'mongoose';
 
-export enum ParcelStatus {
-  BOOKED = 'Booked',
-  ASSIGNED = 'Assigned',
-  PICKED_UP = 'Picked Up',
-  IN_TRANSIT = 'In Transit',
-  DELIVERED = 'Delivered',
-  FAILED = 'Failed',
-}
-
-export enum ParcelSize {
-  SMALL = 'Small',
-  MEDIUM = 'Medium',
-  LARGE = 'Large',
-}
-
-export enum PaymentType {
-  COD = 'COD',
-  PREPAID = 'Prepaid',
-}
-
 export interface ICoordinates {
   lat: number;
   lng: number;

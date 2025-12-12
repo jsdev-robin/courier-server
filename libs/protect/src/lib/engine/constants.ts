@@ -1,8 +1,8 @@
 import { CookieOptions } from 'express';
 
-export const ACCESS_TTL: number = 30;
-export const REFRESH_TTL: number = 3;
-export const PROTECT_TTL: number = 3;
+export const ACCESS_TTL = 30;
+export const REFRESH_TTL = 3;
+export const PROTECT_TTL = 3;
 
 // 30 min
 export const ACCESS_COOKIE_EXP = {
@@ -35,7 +35,7 @@ export const COOKIE_OPTIONS_HTTP: CookieOptions = {
   sameSite: 'none',
   secure: true,
   path: '/',
-  domain: '.devmun.xyz',
+  domain: process.env.ISPRODUCTION ? '.devmun.xyz' : 'localhost',
 };
 
 export const COOKIE_OPTIONS_NOT_HTTP: CookieOptions = {
@@ -43,7 +43,7 @@ export const COOKIE_OPTIONS_NOT_HTTP: CookieOptions = {
   sameSite: 'none',
   secure: true,
   path: '/',
-  domain: '.devmun.xyz',
+  domain: process.env.ISPRODUCTION ? '.devmun.xyz' : 'localhost',
 };
 
 // Superadmin cookies

@@ -103,25 +103,34 @@
     }
   },
   "dependencies": {
-    "@server/cloud": "workspace:*",
+    "@server/cloud": "workspace:^",
     "@server/emails": "workspace:*",
     "@server/middlewares": "workspace:*",
     "@server/protect": "workspace:*",
     "@server/types": "workspace:*",
     "@server/utils": "workspace:*",
+    "@server/validations": "workspace:*",
+    "@upstash/redis": "^1.35.7",
     "body-parser": "^2.2.1",
+    "bwip-js": "^4.8.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.3",
     "mongoose": "^8.20.0",
     "morgan": "^1.10.1",
+    "nanoid": "^5.1.6",
+    "qrcode": "^1.5.4",
+    "redis": "^5.10.0",
     "socket.io": "^4.8.1"
   },
   "devDependencies": {
     "@types/body-parser": "^1.19.6",
     "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2.8.19",
-    "@types/morgan": "^1.9.10"
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/morgan": "^1.9.10",
+    "@types/qrcode": "^1.5.6"
   }
 }
