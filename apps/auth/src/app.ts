@@ -1,10 +1,13 @@
+import { nodeClient } from '@server/cloud';
 import { ApiError, globalErrorHandler } from '@server/middlewares';
 import { HttpStatusCode } from '@server/utils';
 import bodyParser from 'body-parser';
+import { RedisStore } from 'connect-redis';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { Application, NextFunction, Request, Response } from 'express';
 import rateLimit from 'express-rate-limit';
+import session from 'express-session';
 import useragent from 'express-useragent';
 import ipinfo, { defaultIPSelector } from 'ipinfo-express';
 import morgan from 'morgan';
@@ -28,6 +31,26 @@ app.set('view engine', 'ejs');
 
 // Proxy middleware
 app.set('trust proxy', 1);
+
+const redisStore = new RedisStore({
+  client: nodeClient,
+  prefix: 'devmun:',
+  ttl: 5 * 60,
+});
+
+app.use(
+  session({
+    store: redisStore,
+    secret: 'your-secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 5 * 60 * 1000,
+      httpOnly: true,
+      sameSite: 'lax',
+    },
+  })
+);
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
