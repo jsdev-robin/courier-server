@@ -21,7 +21,7 @@
     "@server/types": "workspace:*",
     "@server/utils": "workspace:*",
     "jsonwebtoken": "^9.0.3",
-    "mongoose": "8.20.0",
+    "mongoose": "^8.20.0",
     "tslib": "^2.3.0"
   },
   "devDependencies": {

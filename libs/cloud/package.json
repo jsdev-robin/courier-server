@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@upstash/redis": "^1.35.7",
-    "mongoose": "^9.0.1",
+    "mongoose": "^8.20.0",
     "redis": "^5.10.0"
   }
 }
