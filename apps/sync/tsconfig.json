@@ -4,6 +4,18 @@
   "include": [],
   "references": [
     {
+      "path": "../../libs/utils"
+    },
+    {
+      "path": "../../libs/protect"
+    },
+    {
+      "path": "../../libs/middlewares"
+    },
+    {
+      "path": "../../libs/cloud"
+    },
+    {
       "path": "./tsconfig.app.json"
     },
     {

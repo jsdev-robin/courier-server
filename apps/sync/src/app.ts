@@ -6,8 +6,6 @@ import cors from 'cors';
 import express, { Application, NextFunction, Request, Response } from 'express';
 import morgan from 'morgan';
 import { config } from './configs/configs';
-import adminRouter from './routes/adminRoutes';
-import customerRouter from './routes/customerRoutes';
 
 const app: Application = express();
 
@@ -46,16 +44,13 @@ app.use(
 app.get('/', async (req, res) => {
   res.status(200).json({
     status: 'success',
-    message: '🚀 Welcome to Parcel! Your API is running perfectly.',
+    message: '🚀 Welcome to Sync! Your API is running perfectly.',
     timestamp: new Date().toISOString(),
     uptimeSeconds: process.uptime(),
     environment: config.NODE_ENV,
     version: '1.0.0',
   });
 });
-
-app.use('/admin', adminRouter);
-app.use('/customer', customerRouter);
 
 // Handle 404 errors
 app.all(/(.*)/, (req: Request, res: Response, next: NextFunction) => {

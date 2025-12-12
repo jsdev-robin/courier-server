@@ -1,7 +1,8 @@
+import { nodeClient } from '@server/cloud';
 import { ApiError } from '@server/middlewares';
 import { catchAsync, HttpStatusCode, Status } from '@server/utils';
 import { NextFunction, Request, RequestHandler, Response } from 'express';
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 import { IParcel } from '../models/parcel/types';
 
 export class ParcelAdminServices {
@@ -39,68 +40,21 @@ export class ParcelAdminServices {
   );
 
   public findOneAndUpdateAssignAuto: RequestHandler = catchAsync(
-    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      const parcelId = req.params.id;
-
-      const result = await this.model.aggregate([
+    async (req: Request, res: Response): Promise<void> => {
+      const user = await nodeClient.geoSearch(
+        'agent/location',
+        { longitude: 90.01955619163091, latitude: 23.834249431330473 },
+        { radius: 1000, unit: 'm' },
         {
-          $match: {
-            $and: [{ _id: new Types.ObjectId(parcelId) }, { status: 'Booked' }],
-          },
-        },
-        {
-          $lookup: {
-            from: 'agents',
-            let: { pickupCoord: '$pickupAddress.coordinates' },
-            pipeline: [
-              { $match: { status: 'available' } },
-              {
-                $addFields: {
-                  distance: {
-                    $geoNear: {
-                      near: {
-                        type: 'Point',
-                        coordinates: ['$$pickupCoord.lng', '$$pickupCoord.lat'],
-                      },
-                      distanceField: 'distance',
-                      spherical: true,
-                    },
-                  },
-                },
-              },
-              { $sort: { distance: 1 } },
-              { $limit: 1 },
-            ],
-            as: 'nearestAgent',
-          },
-        },
-        { $unwind: '$nearestAgent' },
-        {
-          $set: {
-            assignedAgent: '$nearestAgent._id',
-            status: 'ASSIGNED',
-          },
-        },
-      ]);
-
-      if (!result.length) {
-        return next(
-          new ApiError(
-            'Parcel not found or no available agent nearby.',
-            HttpStatusCode.NOT_FOUND
-          )
-        );
-      }
-
-      await this.model.updateOne(
-        { _id: new Types.ObjectId(parcelId) },
-        { $set: { assignedAgent: result[0].assignedAgent, status: 'Assigned' } }
+          SORT: 'ASC',
+          COUNT: { value: 1 },
+        }
       );
 
       res.status(HttpStatusCode.OK).json({
         status: Status.SUCCESS,
         message: 'Parcel has been auto-assigned successfully.',
-        data: { parcel: result[0] },
+        user,
       });
     }
   );
