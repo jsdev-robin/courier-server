@@ -215,6 +215,7 @@ export class ParcelAdminServices {
               },
               {
                 $project: {
+                  _id: 1,
                   name: {
                     $concat: [
                       { $ifNull: ['$personalInfo.givenName', ''] },
@@ -235,6 +236,13 @@ export class ParcelAdminServices {
               trackingNumber: '$trackingNumber',
               size: '$parcelDetails.size',
               paymentType: '$payment.type',
+              agentId: {
+                $cond: {
+                  if: { $gt: [{ $size: '$nearestAgents' }, 0] },
+                  then: { $arrayElemAt: ['$nearestAgents._id', 0] },
+                  else: null,
+                },
+              },
               agentName: {
                 $cond: {
                   if: { $gt: [{ $size: '$nearestAgents' }, 0] },

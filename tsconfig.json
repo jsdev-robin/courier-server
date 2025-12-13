@@ -56,6 +56,18 @@
     },
     {
       "path": "./libs/features"
+    },
+    {
+      "path": "./apps/resources-e2e"
+    },
+    {
+      "path": "./apps/resources"
+    },
+    {
+      "path": "./apps/analytics-e2e"
+    },
+    {
+      "path": "./apps/analytics"
     }
   ]
 }

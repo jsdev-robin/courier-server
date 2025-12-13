@@ -11,7 +11,7 @@ router.use(
   adminProtect.restrictTo('admin')
 );
 
-router.route('/').get(adminParcelController.findGeoNear);
+router.route('/geo-near').get(adminParcelController.findGeoNear);
 
 router
   .route('/:id/:agentId')

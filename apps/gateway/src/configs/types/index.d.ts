@@ -4,6 +4,7 @@ export interface ProcessEnv {
   GATEWAY_PORT: string;
   AUTH_GATEWAY: string;
   PARCEL_GATEWAY: string;
+  RESOURCES_GATEWAY: string;
 
   COOKIE_SECRET: string;
 
