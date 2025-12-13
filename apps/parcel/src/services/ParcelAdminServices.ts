@@ -64,8 +64,8 @@ export class ParcelAdminServices {
       const user = await nodeClient.geoSearch(
         'agent/location',
         {
-          longitude: parcel?.deliveryAddress?.coordinates?.lng,
-          latitude: parcel?.deliveryAddress?.coordinates?.lat,
+          longitude: parcel.deliveryAddress?.coordinates?.lng,
+          latitude: parcel.deliveryAddress?.coordinates?.lat,
         },
         { radius: 1000, unit: 'm' },
         {
