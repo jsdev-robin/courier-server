@@ -5,6 +5,7 @@ export interface ProcessEnv {
   AUTH_GATEWAY: string;
   PARCEL_GATEWAY: string;
   RESOURCES_GATEWAY: string;
+  ANALYTICS_GATEWAY: string;
 
   COOKIE_SECRET: string;
 

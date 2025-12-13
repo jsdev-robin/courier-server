@@ -9,14 +9,34 @@ dotenv.config({
 
 const requiredVars: Array<keyof ProcessEnv> = [
   'NODE_ENV',
-  'GATEWAY_PORT',
+  'ANALYTICS_PORT',
+
+  // Database
+  'DATABASE_ONLINE',
+  'DATABASE_PASSWORD_ONLINE',
+
+  // Redis
+  'NODE_REDIS_URL',
+  'NODE_REDIS_PORT',
+  'REDIS_URL',
+  'UPSTASH_REDIS_REST_URL',
+  'UPSTASH_REDIS_REST_TOKEN',
+
+  // Security & Auth
   'COOKIE_SECRET',
+  'ACTIVATION_SECRET',
+  'CRYPTO_SECRET',
+  'HMAC_SECRET',
+
+  // Tokens
+  'ACCESS_TOKEN',
+  'REFRESH_TOKEN',
+  'PROTECT_TOKEN',
+
+  // Client URLs
   'WEB_CLIENT_URL',
   'ADMIN_CLIENT_URL',
-  'AUTH_GATEWAY',
-  'PARCEL_GATEWAY',
-  'RESOURCES_GATEWAY',
-  'ANALYTICS_GATEWAY',
+  'AGENT_CLIENT_URL',
 ];
 
 function validateEnv(env: ProcessEnv) {
@@ -34,13 +54,20 @@ validateEnv(env);
 
 const defaults: Partial<ProcessEnv> = {
   NODE_ENV: 'development',
-  GATEWAY_PORT: '8001',
+  ANALYTICS_PORT: '8006',
 };
 
-const config: ProcessEnv & { ISPRODUCTION: boolean } = {
+const config: ProcessEnv & { ISPRODUCTION: boolean; DB: string } = {
   ...defaults,
   ...env,
   ISPRODUCTION: env.NODE_ENV === 'production',
+  DB:
+    env.NODE_ENV === 'production'
+      ? env.DATABASE_ONLINE.replace(
+          '<db_password>',
+          env.DATABASE_PASSWORD_ONLINE
+        )
+      : 'mongodb://127.0.0.1/courier',
 };
 
 export { config };
