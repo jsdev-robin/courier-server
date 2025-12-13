@@ -4,6 +4,27 @@
   "include": [],
   "references": [
     {
+      "path": "../../libs/validations"
+    },
+    {
+      "path": "../../libs/utils"
+    },
+    {
+      "path": "../../libs/types"
+    },
+    {
+      "path": "../../libs/protect"
+    },
+    {
+      "path": "../../libs/middlewares"
+    },
+    {
+      "path": "../../libs/emails"
+    },
+    {
+      "path": "../../libs/cloud"
+    },
+    {
       "path": "./tsconfig.app.json"
     },
     {
