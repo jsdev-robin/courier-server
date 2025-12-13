@@ -39,6 +39,11 @@ export interface ISession {
   status?: boolean;
 }
 
+export interface ICoordinates {
+  lat: number;
+  lng: number;
+}
+
 export interface Oauth {
   provider:
     | 'jwt'
@@ -93,6 +98,7 @@ export interface IUser extends Document {
     };
     oauth: Oauth[];
   };
+  location?: ICoordinates;
   role: Role;
   sessions?: ISession;
 

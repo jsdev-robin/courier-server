@@ -1,6 +1,7 @@
 import { IUser } from '@server/types';
 import { compare, hash } from 'bcryptjs';
 import { model, Model, Schema } from 'mongoose';
+import { coordinatesSchema } from './schemas/coordinatesSchema.js';
 import { SessionSchema } from './schemas/sessionSchema.js';
 
 const AgentSchema = new Schema<IUser>(
@@ -96,6 +97,7 @@ const AgentSchema = new Schema<IUser>(
         default: [],
       },
     },
+    location: { type: coordinatesSchema },
     role: {
       type: String,
       default: 'agent',

@@ -10,6 +10,24 @@ export const validation = {
       .withMessage('Invalid ID format'),
   ],
 
+  agentId: [
+    param('agentId')
+      .trim()
+      .notEmpty()
+      .withMessage('Agent ID is required')
+      .isMongoId()
+      .withMessage('Invalid Agent ID format'),
+  ],
+
+  userId: [
+    param('userId')
+      .trim()
+      .notEmpty()
+      .withMessage('User ID is required')
+      .isMongoId()
+      .withMessage('Invalid User ID format'),
+  ],
+
   slug: [
     param('slug')
       .trim()
