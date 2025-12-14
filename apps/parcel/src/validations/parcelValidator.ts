@@ -1,6 +1,7 @@
-import { body } from 'express-validator';
+import { body, param } from 'express-validator';
+import { ParcelStatus } from '../models/parcel/schemas/trackingHistorySchema';
 
-export const create = [
+const create = [
   // Pickup Address
   body('pickupAddress.street')
     .isString()
@@ -186,6 +187,28 @@ export const create = [
     .withMessage('Pickup date must be a valid date'),
 ];
 
+export const status = [
+  body('status')
+    .notEmpty()
+    .withMessage('Status is required')
+    .isIn(
+      Object.values(ParcelStatus).filter(
+        (status) => status !== ParcelStatus.BOOKED
+      )
+    )
+    .withMessage('Invalid parcel status'),
+];
+
+export const trackingNumber = [
+  param('trackingNumber')
+    .notEmpty()
+    .withMessage('Tracking number is required')
+    .isString()
+    .withMessage('Tracking number must be a string'),
+];
+
 export const parcelValidator = {
   create,
+  status,
+  trackingNumber,
 };

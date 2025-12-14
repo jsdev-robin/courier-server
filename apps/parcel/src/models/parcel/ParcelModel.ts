@@ -1,5 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import '../register/agentRegister';
+import '../register/userRegister';
 import { coordinatesSchema } from './schemas/coordinatesSchema';
 import {
   ParcelStatus,

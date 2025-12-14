@@ -7,6 +7,7 @@ import express, { Application, NextFunction, Request, Response } from 'express';
 import morgan from 'morgan';
 import { config } from './configs/configs';
 import adminRouter from './routes/adminRoutes';
+import agentRouter from './routes/agentRoutes';
 import customerRouter from './routes/customerRoutes';
 
 const app: Application = express();
@@ -55,6 +56,7 @@ app.get('/', async (req, res) => {
 });
 
 app.use('/admin', adminRouter);
+app.use('/agent', agentRouter);
 app.use('/customer', customerRouter);
 
 // Handle 404 errors

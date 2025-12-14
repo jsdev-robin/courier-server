@@ -14,13 +14,13 @@ router.use(
 router.route('/geo-near').get(adminParcelController.findGeoNear);
 
 router
-  .route('/:id/:agentId')
-  .all([...validation.id, ...validation.agentId])
-  .get(validationRequest, adminParcelController.findOneAndUpdateAssign);
-
-router
   .route('/:id/auto')
   .all(validation.id)
-  .get(validationRequest, adminParcelController.findOneAndUpdateAssignAuto);
+  .patch(validationRequest, adminParcelController.findOneAndUpdateAssignAuto);
+
+router
+  .route('/:id/:agentId')
+  .all([...validation.id, ...validation.agentId])
+  .patch(validationRequest, adminParcelController.findOneAndUpdateAssign);
 
 export default router;

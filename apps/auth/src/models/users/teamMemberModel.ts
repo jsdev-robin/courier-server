@@ -10,24 +10,7 @@ const TeamMemberSchema = new Schema<IUser>(
       givenName: { type: String },
       email: { type: String, unique: true },
       phone: { type: String },
-      dateOfBirth: { type: Date },
-      gender: {
-        type: String,
-        enum: ['male', 'female', 'other', ''],
-        default: '',
-      },
-      nationality: { type: String },
       address: { type: String },
-      avatar: {
-        public_id: { type: String },
-        url: { type: String },
-      },
-      socialLinks: {
-        facebook: String,
-        twitter: String,
-        instagram: String,
-        youtube: String,
-      },
       emergencyContacts: {
         type: [
           {

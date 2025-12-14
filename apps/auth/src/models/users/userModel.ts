@@ -9,24 +9,8 @@ const UserSchema = new Schema<IUser>(
       familyName: { type: String },
       givenName: { type: String },
       email: { type: String, unique: true },
-      phone: { type: String, immutable: true },
-      dateOfBirth: { type: Date, immutable: true },
-      gender: {
-        type: String,
-        enum: ['male', 'female', 'other'],
-      },
-      nationality: { type: String },
+      phone: { type: String },
       address: { type: String },
-      avatar: {
-        public_id: { type: String },
-        url: { type: String },
-      },
-      socialLinks: {
-        facebook: String,
-        twitter: String,
-        instagram: String,
-        youtube: String,
-      },
       emergencyContacts: {
         type: [
           {

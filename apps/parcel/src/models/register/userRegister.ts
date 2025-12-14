@@ -2,7 +2,7 @@ import { IUser } from '@server/types';
 import mongoose, { Model, Schema } from 'mongoose';
 import { coordinatesSchema } from './coordinatesSchema';
 
-const AgentSchema = new Schema<IUser>(
+const UserSchema = new Schema<IUser>(
   {
     personalInfo: {
       familyName: String,
@@ -25,24 +25,20 @@ const AgentSchema = new Schema<IUser>(
   { timestamps: true }
 );
 
-AgentSchema.index({ 'personalInfo.email': 1 });
-AgentSchema.index({ 'personalInfo.phone': 1 });
+UserSchema.index({ 'personalInfo.email': 1 });
+UserSchema.index({ 'personalInfo.phone': 1 });
 
-AgentSchema.index({ 'personalInfo.familyName': 1 });
-AgentSchema.index({ 'personalInfo.givenName': 1 });
+UserSchema.index({ 'personalInfo.familyName': 1 });
+UserSchema.index({ 'personalInfo.givenName': 1 });
 
-AgentSchema.index({
+UserSchema.index({
   'personalInfo.familyName': 'text',
   'personalInfo.givenName': 'text',
   'personalInfo.email': 'text',
 });
 
-AgentSchema.index({ role: 1 });
+UserSchema.index({ role: 1 });
 
-AgentSchema.index({ createdAt: -1 });
+UserSchema.index({ createdAt: -1 });
 
-export const Seller: Model<IUser> = mongoose.model<IUser>(
-  'Agent',
-  AgentSchema,
-  'Agents'
-);
+export const Seller: Model<IUser> = mongoose.model<IUser>('User', UserSchema);

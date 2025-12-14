@@ -7,6 +7,7 @@ import express, { Application, NextFunction, Request, Response } from 'express';
 import morgan from 'morgan';
 import { config } from './configs/configs';
 import agentRouter from './routes/agentRoutes';
+import navigationRouter from './routes/navigationRoutes';
 
 const app: Application = express();
 
@@ -54,6 +55,7 @@ app.get('/', async (req, res) => {
 });
 
 app.use('/agent', agentRouter);
+app.use('/navigation', navigationRouter);
 
 // Handle 404 errors
 app.all(/(.*)/, (req: Request, res: Response, next: NextFunction) => {
