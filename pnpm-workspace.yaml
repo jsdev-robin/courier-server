@@ -10,3 +10,4 @@ packages:
   - 'libs/validations'
   - 'libs/upload'
   - 'libs/features'
+  - 'libs/models'

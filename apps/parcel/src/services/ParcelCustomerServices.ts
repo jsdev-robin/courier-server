@@ -17,7 +17,7 @@ export class ParcelCustomerServices {
 
   public create: RequestHandler = catchAsync(
     async (req: Request, res: Response): Promise<void> => {
-      const trackingNumber = `SKU-${nanoid(8)}`;
+      const trackingNumber = `TRK-${nanoid(8)}`;
 
       const [barcodeBuffer, qrCodeBase64] = await Promise.all([
         bwipjs.toBuffer({

@@ -1,7 +1,7 @@
+import { coordinatesSchema } from '@server/models';
 import mongoose, { Schema } from 'mongoose';
 import '../register/agentRegister';
 import '../register/userRegister';
-import { coordinatesSchema } from './schemas/coordinatesSchema';
 import {
   ParcelStatus,
   trackingHistorySchema,
@@ -88,7 +88,6 @@ const parcelSchema = new Schema<IParcel>(
     estimatedDelivery: { type: Date },
     actualDelivery: { type: Date },
     pickupDate: { type: Date },
-
     trackingHistory: [trackingHistorySchema],
 
     qrCode: { type: String },

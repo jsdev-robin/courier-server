@@ -68,6 +68,9 @@
     },
     {
       "path": "./apps/analytics"
+    },
+    {
+      "path": "./libs/models"
     }
   ]
 }

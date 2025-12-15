@@ -1,10 +1,5 @@
+import { ICoordinates } from '@server/models';
 import { Document, Types } from 'mongoose';
-
-export interface ICoordinates {
-  lat: number;
-  lng: number;
-  address?: string;
-}
 
 export interface ITrackingHistory {
   status: ParcelStatus;
