@@ -1,5 +1,6 @@
 import { nodeClient } from '@server/cloud';
 import jwt, { JwtPayload } from 'jsonwebtoken';
+import mongoose from 'mongoose';
 import { Server } from 'socket.io';
 import { config } from '../configs/configs';
 
@@ -22,8 +23,9 @@ function verifyToken(cookies: string | undefined) {
 export async function agentLiveLocation(io: Server) {
   const nameSpace = io.of('/agent/location');
 
-  nameSpace.on('connection', (socket) => {
+  nameSpace.on('connection', async (socket) => {
     const decoded = verifyToken(socket.handshake.headers.cookie);
+    const agentsCollection = mongoose.connection.collection('agents');
 
     if (!decoded || !decoded.id) {
       socket.disconnect(true);
@@ -43,6 +45,18 @@ export async function agentLiveLocation(io: Server) {
             latitude: data.latitude,
             member: decoded?.id,
           });
+
+          await agentsCollection.updateOne(
+            { _id: new mongoose.Types.ObjectId(decoded.id) },
+            {
+              $set: {
+                location: {
+                  lat: data.latitude,
+                  lng: data.longitude,
+                },
+              },
+            }
+          );
         }
       }
     );

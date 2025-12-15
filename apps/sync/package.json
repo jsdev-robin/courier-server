@@ -107,6 +107,7 @@
     "@server/middlewares": "workspace:*",
     "@server/protect": "workspace:*",
     "@server/utils": "workspace:*",
+    "@server/types": "workspace:*",
     "@upstash/redis": "^1.35.7",
     "body-parser": "^2.2.1",
     "cookie-parser": "^1.4.7",

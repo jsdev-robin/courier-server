@@ -10,6 +10,7 @@ router.use(
   agentProtect.restrictTo('agent')
 );
 
+router.route('/navigate').get(NavigationServices.FindNavigate);
 router.route('/duration').get(NavigationServices.FindDuration);
 
 export default router;

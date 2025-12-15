@@ -14,12 +14,12 @@ router.use(
 
 router.route('/').get(agentParcelController.find);
 router
-  .route('/:trackingNumber/qr')
+  .route('/:trackingNumber')
   .all(parcelValidator.trackingNumber)
   .patch(
     parcelValidator.status,
     validationRequest,
-    agentParcelController.findOneAndUpdateStatusBytrackingNumber
+    agentParcelController.findOneAndUpdateStatus
   );
 
 export default router;

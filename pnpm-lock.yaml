@@ -657,6 +657,9 @@ importers:
       '@server/protect':
         specifier: workspace:*
         version: link:../../libs/protect
+      '@server/types':
+        specifier: workspace:*
+        version: link:../../libs/types
       '@server/utils':
         specifier: workspace:*
         version: link:../../libs/utils

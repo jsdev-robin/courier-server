@@ -132,43 +132,6 @@ export class ParcelAgentServices {
 
   public findOneAndUpdateStatus: RequestHandler = catchAsync(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      const parcel = await this.model.findOneAndUpdate(
-        {
-          $and: [{ _id: req.params.id }, { status: 'Booked' }],
-        },
-        {
-          $set: {
-            status: req.body.status,
-          },
-        },
-        {
-          writeConcern: {
-            w: 'majority',
-            j: true,
-            wtimeout: 5000,
-          },
-          new: true,
-        }
-      );
-
-      if (!parcel) {
-        return next(
-          new ApiError(
-            'Parcel not found with the given ID or already assigned',
-            HttpStatusCode.NOT_FOUND
-          )
-        );
-      }
-
-      res.status(HttpStatusCode.OK).json({
-        status: Status.SUCCESS,
-        message: 'Parcel has been assigned successfully.',
-      });
-    }
-  );
-
-  public findOneAndUpdateStatusBytrackingNumber: RequestHandler = catchAsync(
-    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       console.log(req.body);
 
       const parcel = await this.model.findOneAndUpdate(
