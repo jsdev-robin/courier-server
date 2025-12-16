@@ -12,6 +12,8 @@ router.use(
   userProtect.restrictTo('user')
 );
 
+router.route('/many').post(customerParcelController.createMany);
+
 router
   .route('/')
   .post(

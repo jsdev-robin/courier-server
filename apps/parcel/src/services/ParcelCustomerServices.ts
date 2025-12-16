@@ -16,6 +16,55 @@ export class ParcelCustomerServices {
     this.model = options.model;
   }
 
+  public createMany: RequestHandler = catchAsync(
+    async (req: Request, res: Response): Promise<void> => {
+      const createPromises = req.body.map(async (parcel: IParcel) => {
+        const trackingNumber = `TRK-${nanoid(8)}`;
+
+        const [barcodeBuffer, qrCodeBase64] = await Promise.all([
+          bwipjs.toBuffer({
+            bcid: 'code128',
+            text: trackingNumber,
+            scale: 3,
+            height: 10,
+            includetext: true,
+            textxalign: 'center',
+            backgroundcolor: '#22c55e',
+          }),
+          QRCode.toDataURL(trackingNumber),
+        ]);
+
+        const barcodeBase64 = barcodeBuffer.toString('base64');
+
+        const trackingHistory = [
+          {
+            status: ParcelStatus.BOOKED,
+            timestamp: new Date(),
+            notes: 'Parcel booked',
+          },
+        ];
+
+        return {
+          ...parcel,
+          customer: new Types.ObjectId(req.self._id),
+          barcode: `data:image/png;base64,${barcodeBase64}`,
+          trackingNumber,
+          qrCode: qrCodeBase64,
+          trackingHistory,
+        };
+      });
+
+      const payloads = await Promise.all(createPromises);
+
+      await this.model.insertMany(payloads);
+
+      res.status(HttpStatusCode.CREATED).json({
+        status: Status.SUCCESS,
+        message: 'Parcels created successfully.',
+      });
+    }
+  );
+
   public create: RequestHandler = catchAsync(
     async (req: Request, res: Response): Promise<void> => {
       const trackingNumber = `TRK-${nanoid(8)}`;

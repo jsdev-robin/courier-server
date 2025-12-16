@@ -113,11 +113,16 @@ export class APIFeatures<T extends Document> {
     return this;
   }
 
-  public populate(options?: PopulateOptions): this {
+  public populate(options?: PopulateOptions | PopulateOptions[]): this {
     if (options) {
       this.query = this.query.populate(options);
     } else if (typeof this.queryString.populate === 'string') {
-      this.query = this.query.populate({ path: this.queryString.populate });
+      this.queryString.populate
+        .split(',')
+        .map((p) => p.trim())
+        .forEach((path) => {
+          this.query = this.query.populate({ path });
+        });
     }
     return this;
   }

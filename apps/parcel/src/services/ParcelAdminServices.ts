@@ -1,3 +1,4 @@
+import { APIFeatures } from '@server/features';
 import { ApiError } from '@server/middlewares';
 import { catchAsync, HttpStatusCode, Status } from '@server/utils';
 import { NextFunction, Request, RequestHandler, Response } from 'express';
@@ -10,6 +11,68 @@ export class ParcelAdminServices {
   constructor(options: { model: Model<IParcel> }) {
     this.model = options.model;
   }
+
+  public find: RequestHandler = catchAsync(
+    async (req: Request, res: Response): Promise<void> => {
+      const features = await new APIFeatures<IParcel>(this.model, {
+        ...req.query,
+        customer: String(req.self._id),
+      })
+        .filter()
+        .paginate()
+        .sort()
+        .globalSearch(['basicInfo.title'])
+        .limitFields('-qrCode -barcode')
+        .populate({
+          path: 'assignedAgent',
+          select: 'personalInfo',
+        })
+        .populate({
+          path: 'customer',
+          select: 'personalInfo',
+        });
+
+      const { data, total } = await features.exec();
+
+      res.status(HttpStatusCode.OK).json({
+        status: Status.SUCCESS,
+        message: 'All product retrieved successfully',
+        data: {
+          total,
+          data,
+        },
+      });
+    }
+  );
+
+  public findById: RequestHandler = catchAsync(
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      const parcel = await this.model
+        .findById(req.params.id)
+        .populate({
+          path: 'assignedAgent',
+          select: 'personalInfo',
+        })
+        .populate({
+          path: 'customer',
+          select: 'personalInfo',
+        });
+      if (!parcel) {
+        return next(
+          new ApiError(
+            'Parcel not found with the given ID.',
+            HttpStatusCode.NOT_FOUND
+          )
+        );
+      }
+
+      res.status(HttpStatusCode.OK).json({
+        status: Status.SUCCESS,
+        message: 'Parcel retrieved successfully.',
+        data: { parcel },
+      });
+    }
+  );
 
   // public findGeoNear: RequestHandler = catchAsync(
   //   async (req: Request, res: Response): Promise<void> => {

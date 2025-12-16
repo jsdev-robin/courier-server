@@ -11,6 +11,12 @@ router.use(
   adminProtect.restrictTo('admin')
 );
 
+router.route('/').get(adminParcelController.find);
+router
+  .route('/:id')
+  .all(validation.id)
+  .get(validationRequest, adminParcelController.findById);
+
 router.route('/geo-near').get(adminParcelController.findGeoNear);
 
 router
