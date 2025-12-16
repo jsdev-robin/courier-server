@@ -45,7 +45,7 @@ export const authValidations = {
     check('passwordConfirm')
       .notEmpty()
       .withMessage('Please confirm your password')
-      .custom((value, { req }) => value === req.body.password)
+      .custom((value, { req }) => value === req.check.password)
       .withMessage('Passwords do not match'),
   ],
 
@@ -87,7 +87,7 @@ export const authValidations = {
     check('confirmNewPassword')
       .notEmpty()
       .withMessage('Please confirm your password')
-      .custom((value, { req }) => value === req.body.newPassword)
+      .custom((value, { req }) => value === req.check.newPassword)
       .withMessage('Passwords do not match'),
   ],
 
@@ -105,13 +105,13 @@ export const authValidations = {
       .withMessage(
         'Must contain uppercase, lowercase, number, and special character'
       )
-      .custom((value, { req }) => value !== req.body.currentPassword)
+      .custom((value, { req }) => value !== req.check.currentPassword)
       .withMessage('New password must be different from current'),
 
     check('confirmNewPassword')
       .notEmpty()
       .withMessage('Please confirm your new password')
-      .custom((value, { req }) => value === req.body.newPassword)
+      .custom((value, { req }) => value === req.check.newPassword)
       .withMessage('Passwords do not match'),
   ],
 
@@ -251,60 +251,46 @@ export const authValidations = {
   ],
 
   updateProfile: [
-    check('personalInfo.familyName')
-      .optional()
-      .isString()
-      .withMessage('Family name must be a string'),
-    check('personalInfo.givenName')
-      .optional()
-      .isString()
-      .withMessage('Given name must be a string'),
-    check('personalInfo.phone')
-      .exists({ checkFalsy: true })
-      .withMessage('Phone is required')
-      .isMobilePhone(['bn-BD'] as const)
-      .withMessage('Phone must be valid'),
-    check('personalInfo.dateOfBirth')
-      .exists({ checkFalsy: true })
-      .withMessage('Date of birth is required')
-      .isISO8601()
-      .toDate()
-      .withMessage('Date of birth must be valid'),
-    check('personalInfo.gender')
-      .notEmpty()
-      .withMessage('Gender is required')
-      .optional()
-      .isIn(['male', 'female', 'other'])
-      .withMessage('Gender must be male, female, or other'),
+    check('img').optional(),
 
-    check('personalInfo.nationality')
-      .optional({ nullable: true, checkFalsy: true })
+    check('personalInfo.familyName')
       .isString()
-      .withMessage('Nationality must be a string'),
-    check('personalInfo.address')
-      .optional({ nullable: true, checkFalsy: true })
+      .isLength({ min: 1, max: 100 })
+      .withMessage('Family name is required and must be 1-100 characters'),
+
+    check('personalInfo.givenName')
       .isString()
-      .withMessage('Address must be a string'),
-    check('personalInfo.socialLinks.facebook')
-      .optional({ nullable: true, checkFalsy: true })
-      .isURL()
-      .withMessage('Facebook must be a valid URL'),
-    check('personalInfo.socialLinks.twitter')
-      .optional({ nullable: true, checkFalsy: true })
-      .isURL()
-      .withMessage('Twitter must be a valid URL'),
-    check('personalInfo.socialLinks.instagram')
-      .optional({ nullable: true, checkFalsy: true })
-      .isURL()
-      .withMessage('Instagram must be a valid URL'),
-    check('personalInfo.socialLinks.youtube')
-      .optional({ nullable: true, checkFalsy: true })
-      .isURL()
-      .withMessage('Youtube must be a valid URL'),
-    check('personalInfo.emergencyContacts')
-      .optional({ nullable: true, checkFalsy: true })
-      .isArray()
-      .withMessage('Emergency contacts must be an array'),
+      .isLength({ min: 1, max: 100 })
+      .withMessage('Given name is required and must be 1-100 characters'),
+
+    check('personalInfo.phone')
+      .optional()
+      .notEmpty()
+      .withMessage('Phone is required'),
+
+    check('personalInfo.address.street')
+      .notEmpty()
+      .withMessage('Street is required'),
+
+    check('personalInfo.address.city')
+      .notEmpty()
+      .withMessage('City is required'),
+
+    check('personalInfo.address.state')
+      .notEmpty()
+      .withMessage('State is required'),
+
+    check('personalInfo.address.postalCode')
+      .notEmpty()
+      .withMessage('Postal code is required'),
+
+    check('personalInfo.address.coordinates')
+      .isArray({ min: 2, max: 2 })
+      .withMessage('Coordinates must have latitude and longitude'),
+
+    check('personalInfo.address.coordinates.*')
+      .notEmpty()
+      .withMessage('Latitude and longitude are required'),
   ],
 
   verifyBackupCode: [
@@ -331,7 +317,7 @@ export const authValidations = {
       .isEmail()
       .withMessage('Please enter a valid email')
       .normalizeEmail()
-      .custom((value, { req }) => value === req.body.newEmail)
+      .custom((value, { req }) => value === req.check.newEmail)
       .withMessage('Emails do not match')
       .custom((value, { req }) => value !== req.self?.personalInfo.email)
       .withMessage('New email must be different from current email'),
