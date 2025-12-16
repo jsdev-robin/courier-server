@@ -80,6 +80,13 @@ router.post(
   userAuthController.createSession
 );
 
+// Social Login
+router.get('/google', socialAuthProvider('google', 'user'));
+router.get('/github', socialAuthProvider('github', 'user'));
+router.get('/facebook', socialAuthProvider('facebook', 'user'));
+router.get('/twitter', socialAuthProvider('twitter', 'user'));
+router.get('/discord', socialAuthProvider('discord', 'user'));
+
 // ============================== Protected Routes =======================
 router.use(
   protect.validateToken,

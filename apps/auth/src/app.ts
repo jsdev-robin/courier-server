@@ -16,7 +16,7 @@ import passport from 'passport';
 import { config } from './configs/configs';
 import { initializePassport } from './middleware/passport/passport';
 import adminRouter from './routes/adminRoutes';
-import sellerRouter from './routes/agentRoutes';
+import agentRouter from './routes/agentRoutes';
 import oauthRouter from './routes/oauthRoutes';
 import userRouter from './routes/userRoutes';
 
@@ -175,7 +175,7 @@ app.get('/', async (req, res) => {
 
 // All route
 app.use('/admin', adminRouter);
-app.use('/agent', sellerRouter);
+app.use('/agent', agentRouter);
 app.use('/user', userRouter);
 app.use('/oauth', oauthRouter);
 
