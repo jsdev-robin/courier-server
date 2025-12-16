@@ -72,20 +72,13 @@ export interface IUser extends Document {
     familyName: string;
     givenName: string;
     displayName: string;
-    email: string;
-    phone?: string;
-    address?: IAddress;
     avatar?: {
       public_id?: string;
       url?: string;
     };
-    socialLinks?: {
-      facebook?: string;
-      twitter?: string;
-      instagram?: string;
-      youtube?: string;
-    };
-    emergencyContacts?: { name: string; phone: string; relation: string }[];
+    email: string;
+    phone?: string;
+    address?: IAddress;
   };
 
   authentication: {

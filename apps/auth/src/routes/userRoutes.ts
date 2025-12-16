@@ -1,3 +1,4 @@
+import { normalizeRequestBody } from '@server/middlewares';
 import { validationRequest } from '@server/validations';
 import express, { Router } from 'express';
 import multer from 'multer';
@@ -101,6 +102,7 @@ router
   .get(userAuthController.getProfile)
   .patch(
     upload.single('img'),
+    normalizeRequestBody,
     authValidations.updateProfile,
     validationRequest,
     userAuthController.updateProfile

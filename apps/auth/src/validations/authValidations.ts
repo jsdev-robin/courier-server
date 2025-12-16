@@ -45,7 +45,7 @@ export const authValidations = {
     check('passwordConfirm')
       .notEmpty()
       .withMessage('Please confirm your password')
-      .custom((value, { req }) => value === req.check.password)
+      .custom((value, { req }) => value === req.body.password)
       .withMessage('Passwords do not match'),
   ],
 
@@ -87,7 +87,7 @@ export const authValidations = {
     check('confirmNewPassword')
       .notEmpty()
       .withMessage('Please confirm your password')
-      .custom((value, { req }) => value === req.check.newPassword)
+      .custom((value, { req }) => value === req.body.newPassword)
       .withMessage('Passwords do not match'),
   ],
 
@@ -105,13 +105,13 @@ export const authValidations = {
       .withMessage(
         'Must contain uppercase, lowercase, number, and special character'
       )
-      .custom((value, { req }) => value !== req.check.currentPassword)
+      .custom((value, { req }) => value !== req.body.currentPassword)
       .withMessage('New password must be different from current'),
 
     check('confirmNewPassword')
       .notEmpty()
       .withMessage('Please confirm your new password')
-      .custom((value, { req }) => value === req.check.newPassword)
+      .custom((value, { req }) => value === req.body.newPassword)
       .withMessage('Passwords do not match'),
   ],
 
@@ -252,42 +252,33 @@ export const authValidations = {
 
   updateProfile: [
     check('img').optional(),
-
     check('personalInfo.familyName')
       .isString()
       .isLength({ min: 1, max: 100 })
       .withMessage('Family name is required and must be 1-100 characters'),
-
     check('personalInfo.givenName')
       .isString()
       .isLength({ min: 1, max: 100 })
       .withMessage('Given name is required and must be 1-100 characters'),
-
     check('personalInfo.phone')
       .optional()
       .notEmpty()
       .withMessage('Phone is required'),
-
     check('personalInfo.address.street')
       .notEmpty()
       .withMessage('Street is required'),
-
     check('personalInfo.address.city')
       .notEmpty()
       .withMessage('City is required'),
-
     check('personalInfo.address.state')
       .notEmpty()
       .withMessage('State is required'),
-
     check('personalInfo.address.postalCode')
       .notEmpty()
       .withMessage('Postal code is required'),
-
     check('personalInfo.address.coordinates')
       .isArray({ min: 2, max: 2 })
       .withMessage('Coordinates must have latitude and longitude'),
-
     check('personalInfo.address.coordinates.*')
       .notEmpty()
       .withMessage('Latitude and longitude are required'),
@@ -317,7 +308,7 @@ export const authValidations = {
       .isEmail()
       .withMessage('Please enter a valid email')
       .normalizeEmail()
-      .custom((value, { req }) => value === req.check.newEmail)
+      .custom((value, { req }) => value === req.body.newEmail)
       .withMessage('Emails do not match')
       .custom((value, { req }) => value !== req.self?.personalInfo.email)
       .withMessage('New email must be different from current email'),

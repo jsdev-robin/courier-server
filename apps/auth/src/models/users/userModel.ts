@@ -8,6 +8,10 @@ const UserSchema = new Schema<IUser>(
     personalInfo: {
       familyName: { type: String },
       givenName: { type: String },
+      avatar: {
+        public_id: { type: String },
+        url: { type: String },
+      },
       email: { type: String, unique: true },
       phone: { type: String },
       address: {
