@@ -1,9 +1,10 @@
 import { normalizeRequestBody } from '@server/middlewares';
 import { validationRequest } from '@server/validations';
-import express, { Router } from 'express';
+import express, { NextFunction, Request, Response, Router } from 'express';
 import multer from 'multer';
 import { config } from '../configs/configs';
 import { protect, userAuthController } from '../controllers/userAuthController';
+import { socialAuthProvider } from '../middleware/socialAuthProvider';
 import { authValidations } from '../validations/authValidations';
 
 const upload = multer({ storage: multer.memoryStorage() });
@@ -169,6 +170,41 @@ router.patch(
   authValidations.finishEmailChange,
   validationRequest,
   userAuthController.finishEmailChange
+);
+
+router.get(
+  '/connect/google',
+  (req: Request, res: Response, next: NextFunction) => {
+    socialAuthProvider('google', 'user', req.self.id)(req, res, next);
+  }
+);
+
+router.get(
+  '/connect/facebook',
+  (req: Request, res: Response, next: NextFunction) => {
+    socialAuthProvider('facebook', 'user', req.self.id)(req, res, next);
+  }
+);
+
+router.get(
+  '/connect/twitter',
+  (req: Request, res: Response, next: NextFunction) => {
+    socialAuthProvider('twitter', 'user', req.self.id)(req, res, next);
+  }
+);
+
+router.get(
+  '/connect/github',
+  (req: Request, res: Response, next: NextFunction) => {
+    socialAuthProvider('github', 'user', req.self.id)(req, res, next);
+  }
+);
+
+router.get(
+  '/connect/discord',
+  (req: Request, res: Response, next: NextFunction) => {
+    socialAuthProvider('discord', 'user', req.self.id)(req, res, next);
+  }
 );
 
 router.patch(

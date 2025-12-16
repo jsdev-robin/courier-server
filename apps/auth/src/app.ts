@@ -17,6 +17,7 @@ import { config } from './configs/configs';
 import { initializePassport } from './middleware/passport/passport';
 import adminRouter from './routes/adminRoutes';
 import sellerRouter from './routes/agentRoutes';
+import oauthRouter from './routes/oauthRoutes';
 import userRouter from './routes/userRoutes';
 
 const app: Application = express();
@@ -176,6 +177,7 @@ app.get('/', async (req, res) => {
 app.use('/admin', adminRouter);
 app.use('/agent', sellerRouter);
 app.use('/user', userRouter);
+app.use('/oauth', oauthRouter);
 
 // Handle 404 errors
 app.all(/(.*)/, (req: Request, res: Response, next: NextFunction) => {
