@@ -82,7 +82,7 @@ router.post(
 router.use(
   protect.validateToken,
   protect.requireAuth,
-  protect.restrictTo('agent')
+  protect.restrictTo('user')
 );
 
 // Session Management

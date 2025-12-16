@@ -57,6 +57,14 @@ export interface Oauth {
   _raw: Record<string, unknown>;
 }
 
+export interface IAddress {
+  street?: string;
+  city?: string;
+  state?: string;
+  postalCode?: string;
+  coordinates?: [string, string];
+}
+
 export interface IUser extends Document {
   _id: Types.ObjectId;
   id: string;
@@ -66,10 +74,7 @@ export interface IUser extends Document {
     displayName: string;
     email: string;
     phone?: string;
-    dateOfBirth?: Date;
-    gender?: 'male' | 'female' | 'other';
-    nationality?: string;
-    address?: string;
+    address?: IAddress;
     avatar?: {
       public_id?: string;
       url?: string;

@@ -1,7 +1,7 @@
 import { coordinatesSchema } from '@server/models';
-import '@server/models/agentModel';
-import '@server/models/userModel';
 import mongoose, { Schema } from 'mongoose';
+import '../register/agentRegister';
+import '../register/userRegister';
 import {
   ParcelStatus,
   trackingHistorySchema,

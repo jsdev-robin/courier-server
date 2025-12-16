@@ -1,4 +1,3 @@
-import { nodeClient } from '@server/cloud';
 import { ApiError } from '@server/middlewares';
 import { catchAsync, HttpStatusCode, Status } from '@server/utils';
 import { NextFunction, Request, RequestHandler, Response } from 'express';
@@ -330,28 +329,28 @@ export class ParcelAdminServices {
         );
       }
 
-      const user = await nodeClient.geoSearch(
-        'agent/location',
-        {
-          longitude: parcel.deliveryAddress?.coordinates?.lng,
-          latitude: parcel.deliveryAddress?.coordinates?.lat,
-        },
-        { radius: 1000, unit: 'm' },
-        {
-          SORT: 'ASC',
-          COUNT: { value: 1 },
-        }
-      );
+      // const user = await nodeClient.geoSearch(
+      //   'agent/location',
+      //   {
+      //     longitude: parcel.deliveryAddress?.coordinates?.lng,
+      //     latitude: parcel.deliveryAddress?.coordinates?.lat,
+      //   },
+      //   { radius: 1000, unit: 'm' },
+      //   {
+      //     SORT: 'ASC',
+      //     COUNT: { value: 1 },
+      //   }
+      // );
 
-      const agentId = user[0];
+      // const agentId = user[0];
 
-      if (!agentId) {
-        return next(
-          new ApiError('No nearby agent found', HttpStatusCode.NOT_FOUND)
-        );
-      }
+      // if (!agentId) {
+      //   return next(
+      //     new ApiError('No nearby agent found', HttpStatusCode.NOT_FOUND)
+      //   );
+      // }
 
-      parcel.assignedAgent = new Types.ObjectId(agentId);
+      // parcel.assignedAgent = new Types.ObjectId(agentId);
       parcel.status = 'Assigned';
       await parcel.save();
 

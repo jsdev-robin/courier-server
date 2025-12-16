@@ -41,4 +41,4 @@ AgentSchema.index({ role: 1 });
 
 AgentSchema.index({ createdAt: -1 });
 
-export const Seller: Model<IUser> = mongoose.model<IUser>('Agent', AgentSchema);
+export const Agent: Model<IUser> = mongoose.model<IUser>('Agent', AgentSchema);

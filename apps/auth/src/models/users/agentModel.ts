@@ -11,16 +11,12 @@ const AgentSchema = new Schema<IUser>(
       givenName: { type: String },
       email: { type: String, unique: true },
       phone: { type: String },
-      address: { type: String },
-      emergencyContacts: {
-        type: [
-          {
-            name: { type: String },
-            phone: { type: String },
-            relation: { type: String },
-          },
-        ],
-        select: false,
+      address: {
+        street: String,
+        city: String,
+        state: String,
+        postalCode: String,
+        coordinates: [String],
       },
     },
 
