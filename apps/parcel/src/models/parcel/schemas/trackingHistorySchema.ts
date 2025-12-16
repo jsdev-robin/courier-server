@@ -1,6 +1,6 @@
+import { coordinatesSchema } from '@server/models';
 import { Schema } from 'mongoose';
 import { ITrackingHistory } from '../types';
-import { coordinatesSchema } from './coordinatesSchema';
 
 export enum ParcelStatus {
   BOOKED = 'Booked',
