@@ -28,14 +28,16 @@ const create = [
     .isIn(['Small', 'Medium', 'Large'])
     .withMessage('Parcel size must be one of: Small, Medium, Large'),
   body('parcelDetails.weight').isFloat().withMessage('Weight must be a number'),
-  body('parcelDetails.type').notEmpty().withMessage('Parcel type is required'),
+  body('parcelDetails.category')
+    .notEmpty()
+    .withMessage('Parcel category is required'),
   body('parcelDetails.description').optional(),
 
-  body('payment.type')
+  body('payment.method')
     .notEmpty()
-    .withMessage('Payment type is required')
+    .withMessage('Payment method is required')
     .isIn(['COD', 'Prepaid'])
-    .withMessage('Payment type must be one of: COD, Prepaid'),
+    .withMessage('Payment method must be one of: COD, Prepaid'),
   body('payment.amount').isFloat().withMessage('Amount must be a number'),
   body('payment.codAmount')
     .optional()

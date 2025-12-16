@@ -26,12 +26,12 @@ export interface IParcel extends Document {
   parcelDetails: {
     size: ParcelSize;
     weight: number;
-    type: string;
+    category: string;
     description?: string;
   };
 
   payment: {
-    type: PaymentType;
+    method: PaymentType;
     amount: number;
     codAmount?: number;
     status: 'Pending' | 'Paid' | 'Failed';

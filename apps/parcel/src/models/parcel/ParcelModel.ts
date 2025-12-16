@@ -51,12 +51,16 @@ const parcelSchema = new Schema<IParcel>(
     parcelDetails: {
       size: { type: String, enum: Object.values(ParcelSize), required: true },
       weight: { type: Number, required: true },
-      type: { type: String, required: true },
+      category: { type: String, required: true },
       description: { type: String },
     },
 
     payment: {
-      type: { type: String, enum: Object.values(PaymentType), required: true },
+      method: {
+        type: String,
+        enum: Object.values(PaymentType),
+        required: true,
+      },
       amount: { type: Number, required: true },
       codAmount: { type: Number },
       status: {

@@ -11,22 +11,13 @@ router.use(
   adminProtect.restrictTo('admin')
 );
 
+router.get('/parcel/export/pdf/:id', adminParcelController.findOneAndExportPdf);
+router.get('/csv', adminParcelController.findAllExportExcel);
+
 router.route('/').get(adminParcelController.find);
 router
   .route('/:id')
   .all(validation.id)
   .get(validationRequest, adminParcelController.findById);
-
-router.route('/geo-near').get(adminParcelController.findGeoNear);
-
-router
-  .route('/:id/auto')
-  .all(validation.id)
-  .patch(validationRequest, adminParcelController.findOneAndUpdateAssignAuto);
-
-router
-  .route('/:id/:agentId')
-  .all([...validation.id, ...validation.agentId])
-  .patch(validationRequest, adminParcelController.findOneAndUpdateAssign);
 
 export default router;
