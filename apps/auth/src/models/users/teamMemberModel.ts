@@ -8,7 +8,7 @@ const TeamMemberSchema = new Schema<IUser>(
     personalInfo: {
       familyName: { type: String },
       givenName: { type: String },
-      email: { type: String, unique: true },
+      email: { type: String },
       phone: { type: String },
       address: {
         street: String,
@@ -112,6 +112,22 @@ const TeamMemberSchema = new Schema<IUser>(
     },
   }
 );
+
+TeamMemberSchema.index({ 'personalInfo.email': 1 });
+TeamMemberSchema.index({ 'personalInfo.phone': 1 });
+
+TeamMemberSchema.index({ 'personalInfo.familyName': 1 });
+TeamMemberSchema.index({ 'personalInfo.givenName': 1 });
+
+TeamMemberSchema.index({
+  'personalInfo.familyName': 'text',
+  'personalInfo.givenName': 'text',
+  'personalInfo.email': 'text',
+});
+
+TeamMemberSchema.index({ role: 1 });
+
+TeamMemberSchema.index({ createdAt: -1 });
 
 TeamMemberSchema.virtual('personalInfo.displayName').get(function (
   this: IUser

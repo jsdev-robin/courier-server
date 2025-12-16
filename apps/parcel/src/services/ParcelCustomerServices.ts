@@ -3,7 +3,7 @@ import { ApiError } from '@server/middlewares';
 import { catchAsync, HttpStatusCode, Status } from '@server/utils';
 import bwipjs from 'bwip-js';
 import { NextFunction, Request, RequestHandler, Response } from 'express';
-import { Model, Types } from 'mongoose';
+import mongoose, { Model, Types } from 'mongoose';
 import { nanoid } from 'nanoid';
 import QRCode from 'qrcode';
 import { ParcelStatus } from '../models/parcel/schemas/trackingHistorySchema';
@@ -87,23 +87,80 @@ export class ParcelCustomerServices {
       res.status(HttpStatusCode.OK).json({
         status: Status.SUCCESS,
         message: 'All product retrieved successfully',
-        data: { total, data },
+        data: {
+          parcels: data,
+          total,
+        },
       });
     }
   );
 
   public findOne: RequestHandler = catchAsync(
     async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-      const parcel = await this.model
-        .findOne({
-          $and: [{ _id: req.params.id }, { customer: req.self._id }],
-        })
-        .populate({
-          path: 'assignedAgent',
-          select: 'personalInfo',
-        });
+      const result = await this.model.aggregate([
+        {
+          $match: {
+            $and: [
+              { _id: new mongoose.Types.ObjectId(req.params.id) },
+              { customer: new mongoose.Types.ObjectId(req.self._id) },
+            ],
+          },
+        },
+        {
+          $lookup: {
+            from: 'agents',
+            localField: 'assignedAgent',
+            foreignField: '_id',
+            as: 'agentData',
+          },
+        },
+        {
+          $lookup: {
+            from: 'users',
+            localField: 'customer',
+            foreignField: '_id',
+            as: 'customerData',
+          },
+        },
+        {
+          $unwind: {
+            path: '$agentData',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $unwind: {
+            path: '$customerData',
+            preserveNullAndEmptyArrays: false,
+          },
+        },
+        {
+          $addFields: {
+            assignedAgent: {
+              $cond: {
+                if: { $gt: ['$agentData', null] },
+                then: { personalInfo: '$agentData.personalInfo' },
+                else: null,
+              },
+            },
+            customer: {
+              $cond: {
+                if: { $gt: ['$customerData', null] },
+                then: { personalInfo: '$customerData.personalInfo' },
+                else: null,
+              },
+            },
+          },
+        },
+        {
+          $project: {
+            agentData: 0,
+            customerData: 0,
+          },
+        },
+      ]);
 
-      if (!parcel) {
+      if (!result || result.length === 0) {
         return next(
           new ApiError(
             'Parcel not found with the given ID.',
@@ -115,7 +172,7 @@ export class ParcelCustomerServices {
       res.status(HttpStatusCode.OK).json({
         status: Status.SUCCESS,
         message: 'Parcel retrieved successfully.',
-        data: { parcel },
+        data: { parcel: result[0] },
       });
     }
   );

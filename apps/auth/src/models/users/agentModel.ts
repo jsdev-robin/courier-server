@@ -9,7 +9,7 @@ const AgentSchema = new Schema<IUser>(
     personalInfo: {
       familyName: { type: String },
       givenName: { type: String },
-      email: { type: String, unique: true },
+      email: { type: String },
       phone: { type: String },
       address: {
         street: String,
@@ -114,6 +114,22 @@ const AgentSchema = new Schema<IUser>(
     },
   }
 );
+
+AgentSchema.index({ 'personalInfo.email': 1 });
+AgentSchema.index({ 'personalInfo.phone': 1 });
+
+AgentSchema.index({ 'personalInfo.familyName': 1 });
+AgentSchema.index({ 'personalInfo.givenName': 1 });
+
+AgentSchema.index({
+  'personalInfo.familyName': 'text',
+  'personalInfo.givenName': 'text',
+  'personalInfo.email': 'text',
+});
+
+AgentSchema.index({ role: 1 });
+
+AgentSchema.index({ createdAt: -1 });
 
 AgentSchema.virtual('personalInfo.displayName').get(function (this: IUser) {
   return `${this.personalInfo.familyName} ${this.personalInfo.givenName}`.trim();

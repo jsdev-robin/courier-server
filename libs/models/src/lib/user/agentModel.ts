@@ -5,15 +5,23 @@ import { coordinatesSchema } from '../schemas/coordinatesSchema';
 const AgentSchema = new Schema<IUser>(
   {
     personalInfo: {
-      familyName: String,
-      givenName: String,
-      email: String,
-      phone: String,
+      familyName: { type: String },
+      givenName: { type: String },
       avatar: {
-        public_id: String,
-        url: String,
+        public_id: { type: String },
+        url: { type: String },
+      },
+      email: { type: String },
+      phone: { type: String },
+      address: {
+        street: String,
+        city: String,
+        state: String,
+        postalCode: String,
+        coordinates: [String],
       },
     },
+
     location: { type: coordinatesSchema },
     role: {
       type: String,
