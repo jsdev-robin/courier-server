@@ -1,4 +1,3 @@
-import { coordinatesSchema } from '@server/models';
 import { Schema } from 'mongoose';
 import { ITrackingHistory } from '../types';
 
@@ -14,7 +13,6 @@ export enum ParcelStatus {
 export const trackingHistorySchema = new Schema<ITrackingHistory>(
   {
     status: { type: String, enum: Object.values(ParcelStatus), required: true },
-    location: { type: coordinatesSchema },
     timestamp: { type: Date, default: Date.now },
     notes: { type: String },
   },

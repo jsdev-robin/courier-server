@@ -37,24 +37,13 @@ const parcelSchema = new Schema<IParcel>(
       ref: 'Agent',
     },
 
-    pickupAddress: {
-      street: { type: String, required: true },
-      city: { type: String, required: true },
-      state: { type: String, required: true },
-      country: { type: String, required: true },
-      postalCode: { type: String, required: true },
-      coordinates: { type: coordinatesSchema, required: true },
-      contactName: { type: String, required: true },
-      contactPhone: { type: String, required: true },
-    },
-
     deliveryAddress: {
       street: { type: String, required: true },
       city: { type: String, required: true },
       state: { type: String, required: true },
       country: { type: String, required: true },
       postalCode: { type: String, required: true },
-      coordinates: { type: coordinatesSchema, required: true },
+      location: { type: coordinatesSchema, required: true },
       contactName: { type: String, required: true },
       contactPhone: { type: String, required: true },
     },
@@ -82,14 +71,7 @@ const parcelSchema = new Schema<IParcel>(
       enum: Object.values(ParcelStatus),
       default: ParcelStatus.BOOKED,
     },
-
-    currentLocation: { type: coordinatesSchema },
-
-    estimatedDelivery: { type: Date },
-    actualDelivery: { type: Date },
-    pickupDate: { type: Date },
     trackingHistory: [trackingHistorySchema],
-
     qrCode: { type: String },
     barcode: { type: String },
   },

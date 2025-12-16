@@ -6,6 +6,7 @@ import { NextFunction, Request, RequestHandler, Response } from 'express';
 import { Model, Types } from 'mongoose';
 import { nanoid } from 'nanoid';
 import QRCode from 'qrcode';
+import { ParcelStatus } from '../models/parcel/schemas/trackingHistorySchema';
 import { IParcel } from '../models/parcel/types';
 
 export class ParcelCustomerServices {
@@ -39,12 +40,21 @@ export class ParcelCustomerServices {
 
       const barcodeBase64 = barcodeBuffer.toString('base64');
 
+      const trackingHistory = [
+        {
+          status: ParcelStatus.BOOKED,
+          timestamp: new Date(),
+          notes: 'Parcel booked',
+        },
+      ];
+
       const payload = {
         ...req.body,
         customer: new Types.ObjectId(req.self._id),
         barcode: `data:image/png;base64,${barcodeBase64}`,
         trackingNumber: trackingNumber,
         qrCode: qrCodeBase64,
+        trackingHistory,
       };
 
       await this.model.create(payload);
@@ -66,6 +76,7 @@ export class ParcelCustomerServices {
         .paginate()
         .sort()
         .globalSearch(['basicInfo.title'])
+        .limitFields('-qrCode -barcode')
         .populate({
           path: 'assignedAgent',
           select: 'personalInfo',
