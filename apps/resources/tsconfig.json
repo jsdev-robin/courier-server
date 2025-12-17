@@ -4,6 +4,9 @@
   "include": [],
   "references": [
     {
+      "path": "../../libs/models"
+    },
+    {
       "path": "../../libs/validations"
     },
     {

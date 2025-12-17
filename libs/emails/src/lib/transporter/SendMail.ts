@@ -73,4 +73,8 @@ export class SendEmail {
   public async emailChangeAlert(): Promise<void> {
     await this.send('emailChangeAlert', 'Email Change Alert');
   }
+
+  public async agentInvite(): Promise<void> {
+    await this.send('agentInvite', 'Invite an agent');
+  }
 }

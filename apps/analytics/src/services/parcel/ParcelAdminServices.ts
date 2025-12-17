@@ -2274,4 +2274,317 @@ export class ParcelAdminServices {
       });
     }
   );
+
+  // Chart data
+  public findTodayStatusDistributionMetrics: RequestHandler = catchAsync(
+    async (req: Request, res: Response): Promise<void> => {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+
+      const chartData = await Parcel.aggregate([
+        {
+          $facet: {
+            statusData: [
+              {
+                $match: {
+                  createdAt: {
+                    $gte: today,
+                    $lt: tomorrow,
+                  },
+                },
+              },
+              {
+                $group: {
+                  _id: '$status',
+                  count: { $sum: 1 },
+                },
+              },
+            ],
+          },
+        },
+        {
+          $project: {
+            chartData: {
+              $map: {
+                input: [
+                  ParcelStatus.BOOKED,
+                  ParcelStatus.ASSIGNED,
+                  ParcelStatus.PICKED_UP,
+                  ParcelStatus.IN_TRANSIT,
+                  ParcelStatus.DELIVERED,
+                  ParcelStatus.FAILED,
+                ],
+                as: 'status',
+                in: {
+                  status: '$$status',
+                  count: {
+                    $let: {
+                      vars: {
+                        found: {
+                          $arrayElemAt: [
+                            {
+                              $filter: {
+                                input: '$statusData',
+                                as: 'item',
+                                cond: { $eq: ['$$item._id', '$$status'] },
+                              },
+                            },
+                            0,
+                          ],
+                        },
+                      },
+                      in: { $ifNull: ['$$found.count', 0] },
+                    },
+                  },
+                  fill: {
+                    $switch: {
+                      branches: [
+                        {
+                          case: { $eq: ['$$status', ParcelStatus.BOOKED] },
+                          then: 'var(--chart-1)',
+                        },
+                        {
+                          case: { $eq: ['$$status', ParcelStatus.ASSIGNED] },
+                          then: 'var(--chart-2)',
+                        },
+                        {
+                          case: { $eq: ['$$status', ParcelStatus.PICKED_UP] },
+                          then: 'var(--chart-3)',
+                        },
+                        {
+                          case: { $eq: ['$$status', ParcelStatus.IN_TRANSIT] },
+                          then: 'var(--chart-4)',
+                        },
+                        {
+                          case: { $eq: ['$$status', ParcelStatus.DELIVERED] },
+                          then: 'var(--chart-5)',
+                        },
+                        {
+                          case: { $eq: ['$$status', ParcelStatus.FAILED] },
+                          then: 'var(--destructive)',
+                        },
+                      ],
+                      default: 'var(--chart-1)',
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        {
+          $project: {
+            chartData: {
+              $sortArray: {
+                input: '$chartData',
+                sortBy: { count: -1 },
+              },
+            },
+          },
+        },
+      ]);
+
+      const metrics = chartData[0]?.chartData || [];
+
+      res.status(HttpStatusCode.OK).json({
+        status: Status.SUCCESS,
+        message: 'Today status distribution metrics retrieved successfully',
+        data: {
+          metrics,
+        },
+      });
+    }
+  );
+
+  public findTodayPaymentDistributionMetrics: RequestHandler = catchAsync(
+    async (req: Request, res: Response): Promise<void> => {
+      const today = new Date();
+      const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+      const paymentData = await Parcel.aggregate([
+        {
+          $match: {
+            createdAt: { $gte: startOfMonth },
+          },
+        },
+        {
+          $facet: {
+            statusPaymentData: [
+              {
+                $group: {
+                  _id: {
+                    status: '$status',
+                    paymentMethod: '$payment.method',
+                  },
+                  amount: { $sum: '$payment.amount' },
+                  count: { $sum: 1 },
+                },
+              },
+            ],
+          },
+        },
+        {
+          $project: {
+            chartData: {
+              $map: {
+                input: [
+                  ParcelStatus.BOOKED,
+                  ParcelStatus.ASSIGNED,
+                  ParcelStatus.PICKED_UP,
+                  ParcelStatus.IN_TRANSIT,
+                  ParcelStatus.DELIVERED,
+                  ParcelStatus.FAILED,
+                ],
+                as: 'status',
+                in: {
+                  status: '$$status',
+                  cod: {
+                    amount: {
+                      $let: {
+                        vars: {
+                          found: {
+                            $arrayElemAt: [
+                              {
+                                $filter: {
+                                  input: '$statusPaymentData',
+                                  as: 'item',
+                                  cond: {
+                                    $and: [
+                                      {
+                                        $eq: ['$$item._id.status', '$$status'],
+                                      },
+                                      {
+                                        $eq: [
+                                          '$$item._id.paymentMethod',
+                                          'COD',
+                                        ],
+                                      },
+                                    ],
+                                  },
+                                },
+                              },
+                              0,
+                            ],
+                          },
+                        },
+                        in: { $ifNull: ['$$found.amount', 0] },
+                      },
+                    },
+                    count: {
+                      $let: {
+                        vars: {
+                          found: {
+                            $arrayElemAt: [
+                              {
+                                $filter: {
+                                  input: '$statusPaymentData',
+                                  as: 'item',
+                                  cond: {
+                                    $and: [
+                                      {
+                                        $eq: ['$$item._id.status', '$$status'],
+                                      },
+                                      {
+                                        $eq: [
+                                          '$$item._id.paymentMethod',
+                                          'COD',
+                                        ],
+                                      },
+                                    ],
+                                  },
+                                },
+                              },
+                              0,
+                            ],
+                          },
+                        },
+                        in: { $ifNull: ['$$found.count', 0] },
+                      },
+                    },
+                  },
+                  prepaid: {
+                    amount: {
+                      $let: {
+                        vars: {
+                          found: {
+                            $arrayElemAt: [
+                              {
+                                $filter: {
+                                  input: '$statusPaymentData',
+                                  as: 'item',
+                                  cond: {
+                                    $and: [
+                                      {
+                                        $eq: ['$$item._id.status', '$$status'],
+                                      },
+                                      {
+                                        $eq: [
+                                          '$$item._id.paymentMethod',
+                                          'Prepaid',
+                                        ],
+                                      },
+                                    ],
+                                  },
+                                },
+                              },
+                              0,
+                            ],
+                          },
+                        },
+                        in: { $ifNull: ['$$found.amount', 0] },
+                      },
+                    },
+                    count: {
+                      $let: {
+                        vars: {
+                          found: {
+                            $arrayElemAt: [
+                              {
+                                $filter: {
+                                  input: '$statusPaymentData',
+                                  as: 'item',
+                                  cond: {
+                                    $and: [
+                                      {
+                                        $eq: ['$$item._id.status', '$$status'],
+                                      },
+                                      {
+                                        $eq: [
+                                          '$$item._id.paymentMethod',
+                                          'Prepaid',
+                                        ],
+                                      },
+                                    ],
+                                  },
+                                },
+                              },
+                              0,
+                            ],
+                          },
+                        },
+                        in: { $ifNull: ['$$found.count', 0] },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      ]);
+
+      const metrics = paymentData[0]?.chartData || [];
+
+      res.status(HttpStatusCode.OK).json({
+        status: Status.SUCCESS,
+        message:
+          'Payment distribution by status metrics retrieved successfully',
+        data: {
+          metrics,
+        },
+      });
+    }
+  );
 }

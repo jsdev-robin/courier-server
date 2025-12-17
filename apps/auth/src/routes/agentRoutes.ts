@@ -6,6 +6,7 @@ import {
   agentAuthController,
   protect,
 } from '../controllers/agentAuthController';
+import { OnboardingServices } from '../services/onboarding/OnboardingServices';
 import { authValidations } from '../validations/authValidations';
 
 const upload = multer({ storage: multer.memoryStorage() });
@@ -13,12 +14,15 @@ const upload = multer({ storage: multer.memoryStorage() });
 const router: Router = express.Router();
 
 // ============================== Public Routes ==========================
+
 router.post(
   '/signup',
   authValidations.signup,
   validationRequest,
+  OnboardingServices.checkInvited,
   agentAuthController.signup
 );
+
 router.post(
   '/signup/verify',
   authValidations.verify,

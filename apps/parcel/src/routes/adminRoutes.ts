@@ -18,4 +18,9 @@ router
   .all(validation.id)
   .get(validationRequest, adminParcelController.findById);
 
+router
+  .route('/:id/:agentId')
+  .all([...validation.id, ...validation.agentId])
+  .patch(validationRequest, adminParcelController.findOneAndUpdateAssign);
+
 export default router;

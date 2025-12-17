@@ -6,6 +6,7 @@ import {
   adminAuthController,
   adminProtect,
 } from '../controllers/adminAuthController';
+import { OnboardingServices } from '../services/onboarding/OnboardingServices';
 import { authValidations } from '../validations/authValidations';
 
 const upload = multer({ storage: multer.memoryStorage() });
@@ -157,6 +158,13 @@ router.patch(
   authValidations.finishEmailChange,
   validationRequest,
   adminAuthController.finishEmailChange
+);
+
+router.post(
+  '/invite',
+  authValidations.isEmail,
+  validationRequest,
+  OnboardingServices.invite
 );
 
 export default router;

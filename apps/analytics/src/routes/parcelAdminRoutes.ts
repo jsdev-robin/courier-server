@@ -48,4 +48,13 @@ router
   .route('/metrics/last7days')
   .get(parcelAdminController.findLast7DaysMetrics);
 
+// Current Date
+router
+  .route('/metrics/today/status/distribution')
+  .get(parcelAdminController.findTodayStatusDistributionMetrics);
+
+router
+  .route('/metrics/today/payment/distribution')
+  .get(parcelAdminController.findTodayPaymentDistributionMetrics);
+
 export default router;
