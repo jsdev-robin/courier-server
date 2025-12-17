@@ -835,14 +835,16 @@ export class ParcelAdminServices {
       const tomorrow = new Date(today);
       tomorrow.setDate(tomorrow.getDate() + 1);
 
-      const mapDistribution = await Parcel.aggregate([
+      const metrics = await Parcel.aggregate([
         {
           $match: {
             createdAt: { $gte: today, $lt: tomorrow },
+            status: { $ne: ParcelStatus.DELIVERED },
           },
         },
         {
           $project: {
+            trackingNumber: 1,
             name: '$deliveryAddress.city',
             status: '$status',
             coordinates: {
@@ -862,6 +864,15 @@ export class ParcelAdminServices {
                 else: null,
               },
             },
+            deliveryAddress: {
+              street: '$deliveryAddress.street',
+              city: '$deliveryAddress.city',
+              state: '$deliveryAddress.state',
+              country: '$deliveryAddress.country',
+              postalCode: '$deliveryAddress.postalCode',
+              contactName: '$deliveryAddress.contactName',
+              contactPhone: '$deliveryAddress.contactPhone',
+            },
           },
         },
         {
@@ -872,9 +883,11 @@ export class ParcelAdminServices {
         {
           $project: {
             _id: 0,
+            trackingNumber: 1,
             name: 1,
             status: 1,
             coordinates: 1,
+            deliveryAddress: 1,
           },
         },
       ]);
@@ -882,7 +895,9 @@ export class ParcelAdminServices {
       res.status(HttpStatusCode.OK).json({
         status: Status.SUCCESS,
         message: 'Map distribution data retrieved successfully',
-        data: mapDistribution,
+        data: {
+          metrics,
+        },
       });
     }
   );
