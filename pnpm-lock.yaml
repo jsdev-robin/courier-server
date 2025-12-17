@@ -681,6 +681,9 @@ importers:
       '@server/middlewares':
         specifier: workspace:*
         version: link:../../libs/middlewares
+      '@server/models':
+        specifier: workspace:*
+        version: link:../../libs/models
       '@server/protect':
         specifier: workspace:*
         version: link:../../libs/protect

@@ -20,6 +20,9 @@
   ],
   "references": [
     {
+      "path": "../../libs/models/tsconfig.lib.json"
+    },
+    {
       "path": "../../libs/types/tsconfig.lib.json"
     },
     {

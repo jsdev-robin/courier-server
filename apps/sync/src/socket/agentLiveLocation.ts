@@ -51,8 +51,7 @@ export async function agentLiveLocation(io: Server) {
             {
               $set: {
                 location: {
-                  lat: data.latitude,
-                  lng: data.longitude,
+                  coordinates: [data.longitude, data.latitude],
                 },
               },
             }
