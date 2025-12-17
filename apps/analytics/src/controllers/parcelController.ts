@@ -1,3 +1,3 @@
-import { ParcelServices } from '../services/parcel/ParcelServices';
+import { ParcelAdminServices } from '../services/parcel/ParcelAdminServices';
 
-export const parcelController = new ParcelServices();
+export const parcelAdminController = new ParcelAdminServices();

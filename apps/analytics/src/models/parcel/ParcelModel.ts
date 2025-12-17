@@ -1,4 +1,11 @@
+import { coordinatesSchema } from '@server/models';
 import mongoose, { Schema } from 'mongoose';
+import '../register/agentRegister';
+import '../register/userRegister';
+import {
+  ParcelStatus,
+  trackingHistorySchema,
+} from './schemas/trackingHistorySchema';
 import { IParcel } from './types';
 
 enum ParcelSize {
@@ -10,15 +17,6 @@ enum ParcelSize {
 enum PaymentType {
   COD = 'COD',
   PREPAID = 'Prepaid',
-}
-
-export enum ParcelStatus {
-  BOOKED = 'Booked',
-  ASSIGNED = 'Assigned',
-  PICKED_UP = 'Picked Up',
-  IN_TRANSIT = 'In Transit',
-  DELIVERED = 'Delivered',
-  FAILED = 'Failed',
 }
 
 const parcelSchema = new Schema<IParcel>(
@@ -39,15 +37,30 @@ const parcelSchema = new Schema<IParcel>(
       ref: 'Agent',
     },
 
+    deliveryAddress: {
+      street: { type: String, required: true },
+      city: { type: String, required: true },
+      state: { type: String, required: true },
+      country: { type: String, required: true },
+      postalCode: { type: String, required: true },
+      location: { type: coordinatesSchema, required: true },
+      contactName: { type: String, required: true },
+      contactPhone: { type: String, required: true },
+    },
+
     parcelDetails: {
       size: { type: String, enum: Object.values(ParcelSize), required: true },
       weight: { type: Number, required: true },
-      type: { type: String, required: true },
+      category: { type: String, required: true },
       description: { type: String },
     },
 
     payment: {
-      type: { type: String, enum: Object.values(PaymentType), required: true },
+      method: {
+        type: String,
+        enum: Object.values(PaymentType),
+        required: true,
+      },
       amount: { type: Number, required: true },
       codAmount: { type: Number },
       status: {
@@ -62,6 +75,9 @@ const parcelSchema = new Schema<IParcel>(
       enum: Object.values(ParcelStatus),
       default: ParcelStatus.BOOKED,
     },
+    trackingHistory: [trackingHistorySchema],
+    qrCode: { type: String },
+    barcode: { type: String },
   },
   {
     timestamps: true,

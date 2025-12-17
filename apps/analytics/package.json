@@ -109,6 +109,7 @@
     "@server/protect": "workspace:*",
     "@server/types": "workspace:*",
     "@server/utils": "workspace:*",
+    "@server/models": "workspace:*",
     "@server/validations": "workspace:*",
     "body-parser": "^2.2.1",
     "bwip-js": "^4.8.0",

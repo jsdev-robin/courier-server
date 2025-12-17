@@ -7,6 +7,9 @@
       "path": "../../libs/validations"
     },
     {
+      "path": "../../libs/models"
+    },
+    {
       "path": "../../libs/utils"
     },
     {

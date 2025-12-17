@@ -1,14 +1,8 @@
+import { ICoordinates } from '@server/models';
 import { Document, Types } from 'mongoose';
-
-export interface ICoordinates {
-  lat: number;
-  lng: number;
-  address?: string;
-}
 
 export interface ITrackingHistory {
   status: ParcelStatus;
-  location?: ICoordinates;
   timestamp: Date;
   notes?: string;
 }
@@ -18,21 +12,37 @@ export interface IParcel extends Document {
   customer: Types.ObjectId;
   assignedAgent?: Types.ObjectId;
 
+  deliveryAddress: {
+    street: string;
+    city: string;
+    state: string;
+    country: string;
+    postalCode: string;
+    locations: ICoordinates;
+    contactName: string;
+    contactPhone: string;
+  };
+
   parcelDetails: {
     size: ParcelSize;
     weight: number;
-    type: string;
+    category: string;
     description?: string;
   };
 
   payment: {
-    type: PaymentType;
+    method: PaymentType;
     amount: number;
     codAmount?: number;
     status: 'Pending' | 'Paid' | 'Failed';
   };
 
   status: ParcelStatus;
+
+  trackingHistory: ITrackingHistory[];
+
+  qrCode?: string;
+  barcode?: string;
 
   createdAt: Date;
   updatedAt: Date;

@@ -6,7 +6,7 @@ import cors from 'cors';
 import express, { Application, NextFunction, Request, Response } from 'express';
 import morgan from 'morgan';
 import { config } from './configs/configs';
-import parcelRouter from './routes/parcelRoutes';
+import parcelAdminRouter from './routes/parcelAdminRoutes';
 
 const app: Application = express();
 
@@ -53,7 +53,7 @@ app.get('/', async (req, res) => {
   });
 });
 
-app.use('/parcel', parcelRouter);
+app.use('/admin/parcel', parcelAdminRouter);
 
 // Handle 404 errors
 app.all(/(.*)/, (req: Request, res: Response, next: NextFunction) => {
