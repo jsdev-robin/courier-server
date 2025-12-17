@@ -576,6 +576,9 @@ importers:
       '@server/middlewares':
         specifier: workspace:*
         version: link:../../libs/middlewares
+      '@server/models':
+        specifier: workspace:*
+        version: link:../../libs/models
       '@server/protect':
         specifier: workspace:*
         version: link:../../libs/protect
@@ -606,6 +609,9 @@ importers:
       dotenv:
         specifier: ^17.2.3
         version: 17.2.3
+      exceljs:
+        specifier: ^4.4.0
+        version: 4.4.0
       express:
         specifier: ^4.22.1
         version: 4.22.1
@@ -624,6 +630,9 @@ importers:
       nanoid:
         specifier: ^5.1.6
         version: 5.1.6
+      pdfkit:
+        specifier: ^0.17.2
+        version: 0.17.2
       qrcode:
         specifier: ^1.5.4
         version: 1.5.4
@@ -652,6 +661,9 @@ importers:
       '@types/morgan':
         specifier: ^1.9.10
         version: 1.9.10
+      '@types/pdfkit':
+        specifier: ^0.17.4
+        version: 0.17.4
       '@types/qrcode':
         specifier: ^1.5.6
         version: 1.5.6

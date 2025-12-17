@@ -1,6 +1,6 @@
+import { Agent } from '@server/models';
 import { catchAsync, HttpStatusCode, Status } from '@server/utils';
 import { Request, RequestHandler, Response } from 'express';
-import { Agent } from '../../models/agent/agentRegister';
 
 export class AgentServices {
   public findAvailable: RequestHandler = catchAsync(
