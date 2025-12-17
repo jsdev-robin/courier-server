@@ -28,4 +28,24 @@ router
   .get(parcelAdminController.findSuccessRateMetrics);
 router.route('/metrics/cod').get(parcelAdminController.findCODMetrics);
 
+router
+  .route('/metrics/last7days/parcel')
+  .get(parcelAdminController.findParcelLast7Days);
+
+router
+  .route('/metrics/last7days/prepaid')
+  .get(parcelAdminController.findPrepaidLast7Days);
+
+router
+  .route('/metrics/last7days/cod')
+  .get(parcelAdminController.findCodLast7Days);
+
+router
+  .route('/metrics/last7days/success')
+  .get(parcelAdminController.findSuccessRateLast7Days);
+
+router
+  .route('/metrics/last7days')
+  .get(parcelAdminController.findLast7DaysMetrics);
+
 export default router;

@@ -38,6 +38,15 @@ export class ParcelAdminServices {
                       ],
                     },
                   },
+                  totalPrepaid: {
+                    $sum: {
+                      $cond: [
+                        { $eq: ['$payment.method', 'Prepaid'] },
+                        '$payment.amount',
+                        0,
+                      ],
+                    },
+                  },
                   deliveredParcels: {
                     $sum: {
                       $cond: [
@@ -54,6 +63,7 @@ export class ParcelAdminServices {
                   totalParcels: { $ifNull: ['$totalParcels', 0] },
                   totalRevenue: { $ifNull: ['$totalRevenue', 0] },
                   totalCOD: { $ifNull: ['$totalCOD', 0] },
+                  totalPrepaid: { $ifNull: ['$totalPrepaid', 0] },
                   deliveredParcels: { $ifNull: ['$deliveredParcels', 0] },
                 },
               },
@@ -78,6 +88,15 @@ export class ParcelAdminServices {
                       ],
                     },
                   },
+                  totalPrepaid: {
+                    $sum: {
+                      $cond: [
+                        { $eq: ['$payment.method', 'Prepaid'] },
+                        '$payment.amount',
+                        0,
+                      ],
+                    },
+                  },
                   deliveredParcels: {
                     $sum: {
                       $cond: [
@@ -94,6 +113,7 @@ export class ParcelAdminServices {
                   totalParcels: { $ifNull: ['$totalParcels', 0] },
                   totalRevenue: { $ifNull: ['$totalRevenue', 0] },
                   totalCOD: { $ifNull: ['$totalCOD', 0] },
+                  totalPrepaid: { $ifNull: ['$totalPrepaid', 0] },
                   deliveredParcels: { $ifNull: ['$deliveredParcels', 0] },
                 },
               },
@@ -115,6 +135,7 @@ export class ParcelAdminServices {
                   totalParcels: 0,
                   totalRevenue: 0,
                   totalCOD: 0,
+                  totalPrepaid: 0,
                   deliveredParcels: 0,
                 },
                 else: '$currentMonth',
@@ -127,6 +148,7 @@ export class ParcelAdminServices {
                   totalParcels: 0,
                   totalRevenue: 0,
                   totalCOD: 0,
+                  totalPrepaid: 0,
                   deliveredParcels: 0,
                 },
                 else: '$lastMonth',
@@ -205,6 +227,29 @@ export class ParcelAdminServices {
                 else: 0,
               },
             },
+            prepaidAmount: '$currentMonth.totalPrepaid',
+            prepaidAmountChange: {
+              $cond: {
+                if: { $gt: ['$lastMonth.totalPrepaid', 0] },
+                then: {
+                  $multiply: [
+                    {
+                      $divide: [
+                        {
+                          $subtract: [
+                            '$currentMonth.totalPrepaid',
+                            '$lastMonth.totalPrepaid',
+                          ],
+                        },
+                        '$lastMonth.totalPrepaid',
+                      ],
+                    },
+                    100,
+                  ],
+                },
+                else: 0,
+              },
+            },
             successRate: {
               $cond: {
                 if: { $gt: ['$currentMonth.totalParcels', 0] },
@@ -270,6 +315,10 @@ export class ParcelAdminServices {
             codAmountChange: {
               $round: ['$codAmountChange', 1],
             },
+            prepaidAmount: 1,
+            prepaidAmountChange: {
+              $round: ['$prepaidAmountChange', 1],
+            },
             successRate: {
               $round: ['$successRate', 1],
             },
@@ -287,6 +336,8 @@ export class ParcelAdminServices {
         totalRevenueChange: 0,
         codAmount: 0,
         codAmountChange: 0,
+        prepaidAmount: 0,
+        prepaidAmountChange: 0,
         successRate: 0,
         successRateChange: 0,
       };
@@ -295,14 +346,18 @@ export class ParcelAdminServices {
         status: Status.SUCCESS,
         message: 'Parcel stats retrieved successfully',
         data: {
-          totalParcels: result.totalParcels,
-          totalParcelsChange: result.totalParcelsChange,
-          totalRevenue: result.totalRevenue,
-          totalRevenueChange: result.totalRevenueChange,
-          codAmount: result.codAmount,
-          codAmountChange: result.codAmountChange,
-          successRate: result.successRate,
-          successRateChange: result.successRateChange,
+          metrics: {
+            totalParcels: result.totalParcels,
+            totalParcelsChange: result.totalParcelsChange,
+            totalRevenue: result.totalRevenue,
+            totalRevenueChange: result.totalRevenueChange,
+            codAmount: result.codAmount,
+            codAmountChange: result.codAmountChange,
+            prepaidAmount: result.prepaidAmount,
+            prepaidAmountChange: result.prepaidAmountChange,
+            successRate: result.successRate,
+            successRateChange: result.successRateChange,
+          },
         },
       });
     }
@@ -1534,6 +1589,673 @@ export class ParcelAdminServices {
         status: Status.SUCCESS,
         message: 'COD metrics retrieved successfully',
         data: result,
+      });
+    }
+  );
+
+  // Last 7 days
+  public findParcelLast7Days: RequestHandler = catchAsync(
+    async (req: Request, res: Response): Promise<void> => {
+      const currentDate = new Date();
+      const startDate = new Date(currentDate);
+      startDate.setDate(startDate.getDate() - 6);
+      startDate.setHours(0, 0, 0, 0);
+      currentDate.setHours(23, 59, 59, 999);
+
+      const parcelData = await Parcel.aggregate([
+        {
+          $match: {
+            createdAt: { $gte: startDate, $lte: currentDate },
+          },
+        },
+        {
+          $group: {
+            _id: {
+              $dateToString: { format: '%Y-%m-%d', date: '$createdAt' },
+            },
+            parcels: { $sum: 1 },
+          },
+        },
+        {
+          $project: {
+            date: {
+              $dateFromString: {
+                dateString: '$_id',
+                format: '%Y-%m-%d',
+              },
+            },
+            parcels: { $ifNull: ['$parcels', 0] },
+          },
+        },
+        {
+          $densify: {
+            field: 'date',
+            range: {
+              step: 1,
+              unit: 'day',
+              bounds: [startDate, currentDate],
+            },
+          },
+        },
+        {
+          $setWindowFields: {
+            sortBy: { date: 1 },
+            output: {
+              parcels: {
+                $max: '$parcels',
+                window: {
+                  documents: ['unbounded', 'current'],
+                },
+              },
+            },
+          },
+        },
+        {
+          $project: {
+            parcels: {
+              $ifNull: ['$parcels', 0],
+            },
+            _id: 0,
+          },
+        },
+        {
+          $sort: { date: 1 },
+        },
+      ]);
+
+      res.status(HttpStatusCode.OK).json({
+        status: Status.SUCCESS,
+        message: 'Last 7 days parcel data retrieved successfully',
+        data: parcelData,
+      });
+    }
+  );
+
+  public findPrepaidLast7Days: RequestHandler = catchAsync(
+    async (req: Request, res: Response): Promise<void> => {
+      const currentDate = new Date();
+      const startDate = new Date(currentDate);
+      startDate.setDate(startDate.getDate() - 6);
+      startDate.setHours(0, 0, 0, 0);
+      currentDate.setHours(23, 59, 59, 999);
+
+      const prepaidData = await Parcel.aggregate([
+        {
+          $match: {
+            createdAt: { $gte: startDate, $lte: currentDate },
+            'payment.method': 'Prepaid',
+          },
+        },
+        {
+          $group: {
+            _id: {
+              $dateToString: { format: '%Y-%m-%d', date: '$createdAt' },
+            },
+            amount: { $sum: '$payment.amount' },
+            parcels: { $sum: 1 },
+          },
+        },
+        {
+          $project: {
+            date: {
+              $dateFromString: {
+                dateString: '$_id',
+                format: '%Y-%m-%d',
+              },
+            },
+            amount: { $ifNull: ['$amount', 0] },
+            parcels: { $ifNull: ['$parcels', 0] },
+          },
+        },
+        {
+          $densify: {
+            field: 'date',
+            range: {
+              step: 1,
+              unit: 'day',
+              bounds: [startDate, currentDate],
+            },
+          },
+        },
+        {
+          $setWindowFields: {
+            sortBy: { date: 1 },
+            output: {
+              amount: {
+                $max: '$amount',
+                window: {
+                  documents: ['unbounded', 'current'],
+                },
+              },
+              parcels: {
+                $max: '$parcels',
+                window: {
+                  documents: ['unbounded', 'current'],
+                },
+              },
+            },
+          },
+        },
+        {
+          $project: {
+            amount: {
+              $ifNull: ['$amount', 0],
+            },
+            parcels: {
+              $ifNull: ['$parcels', 0],
+            },
+            _id: 0,
+          },
+        },
+        {
+          $sort: { date: 1 },
+        },
+      ]);
+
+      res.status(HttpStatusCode.OK).json({
+        status: Status.SUCCESS,
+        message: 'Last 7 days prepaid data retrieved successfully',
+        data: prepaidData,
+      });
+    }
+  );
+
+  public findCodLast7Days: RequestHandler = catchAsync(
+    async (req: Request, res: Response): Promise<void> => {
+      const currentDate = new Date();
+      const startDate = new Date(currentDate);
+      startDate.setDate(startDate.getDate() - 6);
+      startDate.setHours(0, 0, 0, 0);
+      currentDate.setHours(23, 59, 59, 999);
+
+      const codData = await Parcel.aggregate([
+        {
+          $match: {
+            createdAt: { $gte: startDate, $lte: currentDate },
+            'payment.method': 'COD',
+          },
+        },
+        {
+          $group: {
+            _id: {
+              $dateToString: { format: '%Y-%m-%d', date: '$createdAt' },
+            },
+            amount: { $sum: '$payment.amount' },
+            parcels: { $sum: 1 },
+          },
+        },
+        {
+          $project: {
+            date: {
+              $dateFromString: {
+                dateString: '$_id',
+                format: '%Y-%m-%d',
+              },
+            },
+            amount: { $ifNull: ['$amount', 0] },
+            parcels: { $ifNull: ['$parcels', 0] },
+          },
+        },
+        {
+          $densify: {
+            field: 'date',
+            range: {
+              step: 1,
+              unit: 'day',
+              bounds: [startDate, currentDate],
+            },
+          },
+        },
+        {
+          $setWindowFields: {
+            sortBy: { date: 1 },
+            output: {
+              amount: {
+                $max: '$amount',
+                window: {
+                  documents: ['unbounded', 'current'],
+                },
+              },
+              parcels: {
+                $max: '$parcels',
+                window: {
+                  documents: ['unbounded', 'current'],
+                },
+              },
+            },
+          },
+        },
+        {
+          $project: {
+            amount: {
+              $ifNull: ['$amount', 0],
+            },
+            parcels: {
+              $ifNull: ['$parcels', 0],
+            },
+            _id: 0,
+          },
+        },
+        {
+          $sort: { date: 1 },
+        },
+      ]);
+
+      res.status(HttpStatusCode.OK).json({
+        status: Status.SUCCESS,
+        message: 'Last 7 days COD data retrieved successfully',
+        data: codData,
+      });
+    }
+  );
+
+  public findSuccessRateLast7Days: RequestHandler = catchAsync(
+    async (req: Request, res: Response): Promise<void> => {
+      const currentDate = new Date();
+      const startDate = new Date(currentDate);
+      startDate.setDate(startDate.getDate() - 6);
+      startDate.setHours(0, 0, 0, 0);
+      currentDate.setHours(23, 59, 59, 999);
+
+      const successRateData = await Parcel.aggregate([
+        {
+          $match: {
+            createdAt: { $gte: startDate, $lte: currentDate },
+          },
+        },
+        {
+          $group: {
+            _id: {
+              $dateToString: { format: '%Y-%m-%d', date: '$createdAt' },
+            },
+            totalParcels: { $sum: 1 },
+            deliveredParcels: {
+              $sum: {
+                $cond: [{ $eq: ['$status', 'Delivered'] }, 1, 0],
+              },
+            },
+          },
+        },
+        {
+          $project: {
+            date: {
+              $dateFromString: {
+                dateString: '$_id',
+                format: '%Y-%m-%d',
+              },
+            },
+            totalParcels: { $ifNull: ['$totalParcels', 0] },
+            deliveredParcels: { $ifNull: ['$deliveredParcels', 0] },
+            successRate: {
+              $cond: {
+                if: { $gt: ['$totalParcels', 0] },
+                then: {
+                  $multiply: [
+                    {
+                      $divide: ['$deliveredParcels', '$totalParcels'],
+                    },
+                    100,
+                  ],
+                },
+                else: 0,
+              },
+            },
+          },
+        },
+        {
+          $densify: {
+            field: 'date',
+            range: {
+              step: 1,
+              unit: 'day',
+              bounds: [startDate, currentDate],
+            },
+          },
+        },
+        {
+          $setWindowFields: {
+            sortBy: { date: 1 },
+            output: {
+              successRate: {
+                $max: '$successRate',
+                window: {
+                  documents: ['unbounded', 'current'],
+                },
+              },
+            },
+          },
+        },
+        {
+          $project: {
+            successRate: {
+              $round: [{ $ifNull: ['$successRate', 0] }, 1],
+            },
+            _id: 0,
+          },
+        },
+        {
+          $sort: { date: 1 },
+        },
+      ]);
+
+      res.status(HttpStatusCode.OK).json({
+        status: Status.SUCCESS,
+        message: 'Last 7 days success rate data retrieved successfully',
+        data: successRateData,
+      });
+    }
+  );
+
+  public findLast7DaysMetrics: RequestHandler = catchAsync(
+    async (req: Request, res: Response): Promise<void> => {
+      const currentDate = new Date();
+      const startDate = new Date(currentDate);
+      startDate.setDate(startDate.getDate() - 6);
+      startDate.setHours(0, 0, 0, 0);
+      currentDate.setHours(23, 59, 59, 999);
+
+      const allData = await Parcel.aggregate([
+        {
+          $facet: {
+            parcels: [
+              {
+                $match: {
+                  createdAt: { $gte: startDate, $lte: currentDate },
+                },
+              },
+              {
+                $group: {
+                  _id: {
+                    $dateToString: { format: '%Y-%m-%d', date: '$createdAt' },
+                  },
+                  parcels: { $sum: 1 },
+                },
+              },
+              {
+                $project: {
+                  date: {
+                    $dateFromString: {
+                      dateString: '$_id',
+                      format: '%Y-%m-%d',
+                    },
+                  },
+                  parcels: { $ifNull: ['$parcels', 0] },
+                },
+              },
+              {
+                $densify: {
+                  field: 'date',
+                  range: {
+                    step: 1,
+                    unit: 'day',
+                    bounds: [startDate, currentDate],
+                  },
+                },
+              },
+              {
+                $setWindowFields: {
+                  sortBy: { date: 1 },
+                  output: {
+                    parcels: {
+                      $max: '$parcels',
+                      window: {
+                        documents: ['unbounded', 'current'],
+                      },
+                    },
+                  },
+                },
+              },
+              {
+                $project: {
+                  parcels: { $ifNull: ['$parcels', 0] },
+                  _id: 0,
+                },
+              },
+              {
+                $sort: { date: 1 },
+              },
+            ],
+            prepaid: [
+              {
+                $match: {
+                  createdAt: { $gte: startDate, $lte: currentDate },
+                  'payment.method': 'Prepaid',
+                },
+              },
+              {
+                $group: {
+                  _id: {
+                    $dateToString: { format: '%Y-%m-%d', date: '$createdAt' },
+                  },
+                  amount: { $sum: '$payment.amount' },
+                  parcels: { $sum: 1 },
+                },
+              },
+              {
+                $project: {
+                  date: {
+                    $dateFromString: {
+                      dateString: '$_id',
+                      format: '%Y-%m-%d',
+                    },
+                  },
+                  amount: { $ifNull: ['$amount', 0] },
+                  parcels: { $ifNull: ['$parcels', 0] },
+                },
+              },
+              {
+                $densify: {
+                  field: 'date',
+                  range: {
+                    step: 1,
+                    unit: 'day',
+                    bounds: [startDate, currentDate],
+                  },
+                },
+              },
+              {
+                $setWindowFields: {
+                  sortBy: { date: 1 },
+                  output: {
+                    amount: {
+                      $max: '$amount',
+                      window: {
+                        documents: ['unbounded', 'current'],
+                      },
+                    },
+                    parcels: {
+                      $max: '$parcels',
+                      window: {
+                        documents: ['unbounded', 'current'],
+                      },
+                    },
+                  },
+                },
+              },
+              {
+                $project: {
+                  amount: { $ifNull: ['$amount', 0] },
+                  parcels: { $ifNull: ['$parcels', 0] },
+                  _id: 0,
+                },
+              },
+              {
+                $sort: { date: 1 },
+              },
+            ],
+            cod: [
+              {
+                $match: {
+                  createdAt: { $gte: startDate, $lte: currentDate },
+                  'payment.method': 'COD',
+                },
+              },
+              {
+                $group: {
+                  _id: {
+                    $dateToString: { format: '%Y-%m-%d', date: '$createdAt' },
+                  },
+                  amount: { $sum: '$payment.amount' },
+                  parcels: { $sum: 1 },
+                },
+              },
+              {
+                $project: {
+                  date: {
+                    $dateFromString: {
+                      dateString: '$_id',
+                      format: '%Y-%m-%d',
+                    },
+                  },
+                  amount: { $ifNull: ['$amount', 0] },
+                  parcels: { $ifNull: ['$parcels', 0] },
+                },
+              },
+              {
+                $densify: {
+                  field: 'date',
+                  range: {
+                    step: 1,
+                    unit: 'day',
+                    bounds: [startDate, currentDate],
+                  },
+                },
+              },
+              {
+                $setWindowFields: {
+                  sortBy: { date: 1 },
+                  output: {
+                    amount: {
+                      $max: '$amount',
+                      window: {
+                        documents: ['unbounded', 'current'],
+                      },
+                    },
+                    parcels: {
+                      $max: '$parcels',
+                      window: {
+                        documents: ['unbounded', 'current'],
+                      },
+                    },
+                  },
+                },
+              },
+              {
+                $project: {
+                  amount: { $ifNull: ['$amount', 0] },
+                  parcels: { $ifNull: ['$parcels', 0] },
+                  _id: 0,
+                },
+              },
+              {
+                $sort: { date: 1 },
+              },
+            ],
+            successRate: [
+              {
+                $match: {
+                  createdAt: { $gte: startDate, $lte: currentDate },
+                },
+              },
+              {
+                $group: {
+                  _id: {
+                    $dateToString: { format: '%Y-%m-%d', date: '$createdAt' },
+                  },
+                  totalParcels: { $sum: 1 },
+                  deliveredParcels: {
+                    $sum: {
+                      $cond: [{ $eq: ['$status', 'Delivered'] }, 1, 0],
+                    },
+                  },
+                },
+              },
+              {
+                $project: {
+                  date: {
+                    $dateFromString: {
+                      dateString: '$_id',
+                      format: '%Y-%m-%d',
+                    },
+                  },
+                  totalParcels: { $ifNull: ['$totalParcels', 0] },
+                  deliveredParcels: { $ifNull: ['$deliveredParcels', 0] },
+                  successRate: {
+                    $cond: {
+                      if: { $gt: ['$totalParcels', 0] },
+                      then: {
+                        $multiply: [
+                          {
+                            $divide: ['$deliveredParcels', '$totalParcels'],
+                          },
+                          100,
+                        ],
+                      },
+                      else: 0,
+                    },
+                  },
+                },
+              },
+              {
+                $densify: {
+                  field: 'date',
+                  range: {
+                    step: 1,
+                    unit: 'day',
+                    bounds: [startDate, currentDate],
+                  },
+                },
+              },
+              {
+                $setWindowFields: {
+                  sortBy: { date: 1 },
+                  output: {
+                    successRate: {
+                      $max: '$successRate',
+                      window: {
+                        documents: ['unbounded', 'current'],
+                      },
+                    },
+                  },
+                },
+              },
+              {
+                $project: {
+                  successRate: {
+                    $round: [{ $ifNull: ['$successRate', 0] }, 1],
+                  },
+                  _id: 0,
+                },
+              },
+              {
+                $sort: { date: 1 },
+              },
+            ],
+          },
+        },
+        {
+          $project: {
+            parcels: '$parcels',
+            prepaid: '$prepaid',
+            cod: '$cod',
+            successRate: '$successRate',
+          },
+        },
+      ]);
+
+      const metrics = allData[0] || {
+        parcels: [],
+        prepaid: [],
+        cod: [],
+        successRate: [],
+      };
+
+      res.status(HttpStatusCode.OK).json({
+        status: Status.SUCCESS,
+        message: 'Last 7 days metrics retrieved successfully',
+        data: {
+          metrics,
+        },
       });
     }
   );
