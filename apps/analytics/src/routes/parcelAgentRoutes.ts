@@ -10,7 +10,11 @@ router.use(
   agentProtect.restrictTo('agent')
 );
 
+router.route('/metrics/stats').get(parcelAgentController.findStatsMetrics);
 router.route('/metrics/performance').get(parcelAgentController.findPerformance);
-router;
+router.route('/metrics/locations').get(parcelAgentController.findMapMetrics);
+router
+  .route('/metrics/today/status/distribution')
+  .get(parcelAgentController.findTodayStatusDistributionMetrics);
 
 export default router;

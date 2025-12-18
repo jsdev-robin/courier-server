@@ -122,11 +122,16 @@ export class ParcelAgentServices {
         .skip(skip)
         .limit(limit);
 
+      const total = await this.model.countDocuments({
+        assignedAgent: new mongoose.Types.ObjectId(req.self.id),
+        status: { $ne: ParcelStatus.BOOKED },
+      });
+
       res.status(HttpStatusCode.OK).json({
         status: Status.SUCCESS,
         data: {
           limit: 10,
-          total: parcels.length,
+          total: total,
           parcels,
         },
       });
