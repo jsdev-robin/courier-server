@@ -7,6 +7,7 @@ import express, { Application, NextFunction, Request, Response } from 'express';
 import morgan from 'morgan';
 import { config } from './configs/configs';
 import parcelAdminRouter from './routes/parcelAdminRoutes';
+import parcelAgentRouter from './routes/parcelAgentRoutes';
 
 const app: Application = express();
 
@@ -54,6 +55,7 @@ app.get('/', async (req, res) => {
 });
 
 app.use('/admin/parcel', parcelAdminRouter);
+app.use('/agent/parcel', parcelAgentRouter);
 
 // Handle 404 errors
 app.all(/(.*)/, (req: Request, res: Response, next: NextFunction) => {

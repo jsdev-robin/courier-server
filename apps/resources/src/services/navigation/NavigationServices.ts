@@ -1,13 +1,26 @@
+import { ApiError } from '@server/middlewares';
+import { Agent } from '@server/models';
 import { catchAsync, HttpStatusCode, Status } from '@server/utils';
 import axios from 'axios';
-import { Request, RequestHandler, Response } from 'express';
+import { NextFunction, Request, RequestHandler, Response } from 'express';
 
 export class NavigationServices {
   public static FindNavigate: RequestHandler = catchAsync(
-    async (req: Request, res: Response): Promise<void> => {
-      const { startLng, startLat, endLng, endLat } = req.query;
+    async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      const location = await Agent.findById(req.self.id).select('location');
+      const start = location?.location?.coordinates;
+      const end = (req.query.location as string).split(',').map(Number);
 
-      const url = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjdjZmM3ZTMyOTdmMTRlMDRhZDE5YmIwMzY0YTQ0Mzc4IiwiaCI6Im11cm11cjY0In0=&start=${startLng},${startLat}&end=${endLng},${endLat}`;
+      if (!location) {
+        return next(
+          new ApiError(
+            'GPS is off or location unavailable. Please enable GPS and try again.',
+            HttpStatusCode.BAD_REQUEST
+          )
+        );
+      }
+
+      const url = `https://api.openrouteservice.org/v2/directions/driving-car?api_key=eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjdjZmM3ZTMyOTdmMTRlMDRhZDE5YmIwMzY0YTQ0Mzc4IiwiaCI6Im11cm11cjY0In0=&start=${start?.[0]},${start?.[1]}&end=${end[0]},${end[1]}`;
 
       const response = await axios.get(url);
       const routeData = response.data;

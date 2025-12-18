@@ -3,8 +3,16 @@ import { Schema } from 'mongoose';
 
 export const coordinatesSchema = new Schema<ICoordinates>(
   {
-    lat: { type: Number, required: true },
-    lng: { type: Number, required: true },
+    type: {
+      type: String,
+      enum: ['Point'],
+      default: 'Point',
+      required: true,
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+    },
   },
   { _id: false }
 );
