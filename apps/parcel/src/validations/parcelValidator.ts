@@ -5,7 +5,6 @@ const create = [
   body('deliveryAddress.street').notEmpty().withMessage('Street is required'),
   body('deliveryAddress.city').notEmpty().withMessage('City is required'),
   body('deliveryAddress.state').notEmpty().withMessage('State is required'),
-  body('deliveryAddress.country').notEmpty().withMessage('Country is required'),
   body('deliveryAddress.postalCode')
     .notEmpty()
     .withMessage('Postal code is required'),
