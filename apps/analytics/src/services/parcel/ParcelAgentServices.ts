@@ -711,7 +711,6 @@ export class ParcelAgentServices {
             chartData: {
               $map: {
                 input: [
-                  ParcelStatus.BOOKED,
                   ParcelStatus.ASSIGNED,
                   ParcelStatus.PICKED_UP,
                   ParcelStatus.IN_TRANSIT,
@@ -744,33 +743,29 @@ export class ParcelAgentServices {
                     $switch: {
                       branches: [
                         {
-                          case: { $eq: ['$$status', ParcelStatus.BOOKED] },
+                          case: { $eq: ['$$status', ParcelStatus.ASSIGNED] },
                           then: 'var(--chart-1)',
                         },
                         {
-                          case: { $eq: ['$$status', ParcelStatus.ASSIGNED] },
-                          then: 'var(--chart-2)',
-                        },
-                        {
                           case: { $eq: ['$$status', ParcelStatus.PICKED_UP] },
-                          then: 'var(--chart-3)',
+                          then: 'var(--chart-2)',
                         },
                         {
                           case: {
                             $eq: ['$$status', ParcelStatus.IN_TRANSIT],
                           },
-                          then: 'var(--chart-4)',
+                          then: 'var(--chart-3)',
                         },
                         {
                           case: { $eq: ['$$status', ParcelStatus.DELIVERED] },
-                          then: 'var(--chart-5)',
+                          then: 'var(--chart-4)',
                         },
                         {
                           case: { $eq: ['$$status', ParcelStatus.FAILED] },
                           then: 'var(--destructive)',
                         },
                       ],
-                      default: 'var(--chart-1)',
+                      default: 'var(--chart-5)',
                     },
                   },
                 },
