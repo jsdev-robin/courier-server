@@ -6,7 +6,7 @@ import cors from 'cors';
 import express, { Application, NextFunction, Request, Response } from 'express';
 import morgan from 'morgan';
 import { config } from './configs/configs';
-import agentRouter from './routes/agentRoutes';
+import adminRouter from './routes/adminRoutes';
 import exportRouter from './routes/exportRoutes';
 import navigationRouter from './routes/navigationRoutes';
 
@@ -55,7 +55,7 @@ app.get('/', async (req, res) => {
   });
 });
 
-app.use('/agent', agentRouter);
+app.use('/admin', adminRouter);
 app.use('/navigation', navigationRouter);
 app.use('/export', exportRouter);
 

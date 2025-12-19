@@ -573,6 +573,9 @@ importers:
       '@server/emails':
         specifier: workspace:*
         version: link:../../libs/emails
+      '@server/features':
+        specifier: workspace:*
+        version: link:../../libs/features
       '@server/middlewares':
         specifier: workspace:*
         version: link:../../libs/middlewares

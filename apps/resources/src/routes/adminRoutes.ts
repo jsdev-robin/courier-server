@@ -11,5 +11,6 @@ router.use(
 );
 
 router.route('/available').get(agentController.findAvailable);
+router.route('/agents').get(agentController.find);
 
 export default router;

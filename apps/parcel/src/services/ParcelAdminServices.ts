@@ -79,10 +79,16 @@ export class ParcelAdminServices {
 
   public findNear: RequestHandler = catchAsync(
     async (req: Request, res: Response): Promise<void> => {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+
       const parcels = await this.model.aggregate([
         {
           $match: {
             status: 'Booked',
+            createdAt: { $gte: today, $lt: tomorrow },
           },
         },
         {

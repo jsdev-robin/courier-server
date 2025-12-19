@@ -51,10 +51,10 @@ export class ParcelCustomerServices {
           trackingNumber,
           qrCode: qrCodeBase64,
           trackingHistory,
-          assignedAgent: new mongoose.Types.ObjectId(
-            '694100b1cc3c71e4ee67de8e'
-          ),
-          status: 'Assigned',
+          // assignedAgent: new mongoose.Types.ObjectId(
+          //   '694100b1cc3c71e4ee67de8e'
+          // ),
+          // status: 'Assigned',
         };
       });
 
