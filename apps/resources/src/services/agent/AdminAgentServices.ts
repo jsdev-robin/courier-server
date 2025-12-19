@@ -4,7 +4,7 @@ import { IUser } from '@server/types';
 import { catchAsync, HttpStatusCode, Status } from '@server/utils';
 import { Request, RequestHandler, Response } from 'express';
 
-export class AgentServices {
+export class AdminAgentServices {
   public find: RequestHandler = catchAsync(
     async (req: Request, res: Response): Promise<void> => {
       console.log(req.query);
