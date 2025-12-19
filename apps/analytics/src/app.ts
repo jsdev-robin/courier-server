@@ -6,6 +6,7 @@ import cors from 'cors';
 import express, { Application, NextFunction, Request, Response } from 'express';
 import morgan from 'morgan';
 import { config } from './configs/configs';
+import parcelAdminAdvancedMetricsRouter from './routes/ParcelAdminAdvancedMetricsRoutes';
 import parcelAdminRouter from './routes/parcelAdminRoutes';
 import parcelAgentRouter from './routes/parcelAgentRoutes';
 
@@ -55,6 +56,7 @@ app.get('/', async (req, res) => {
 });
 
 app.use('/admin/parcel', parcelAdminRouter);
+app.use('/admin/metrics/parcel', parcelAdminAdvancedMetricsRouter);
 app.use('/agent/parcel', parcelAgentRouter);
 
 // Handle 404 errors
