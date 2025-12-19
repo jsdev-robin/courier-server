@@ -10,7 +10,7 @@ router.use(
   adminProtect.restrictTo('admin')
 );
 
+router.route('/').get(adminAgentController.find);
 router.route('/available').get(adminAgentController.findAvailable);
-router.route('/agents').get(adminAgentController.find);
 
 export default router;

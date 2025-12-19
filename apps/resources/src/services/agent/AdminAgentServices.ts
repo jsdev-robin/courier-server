@@ -3,6 +3,7 @@ import { Agent } from '@server/models';
 import { IUser } from '@server/types';
 import { catchAsync, HttpStatusCode, Status } from '@server/utils';
 import { Request, RequestHandler, Response } from 'express';
+import { ParcelStatus } from '../../models/parcel/schemas/trackingHistorySchema';
 
 export class AdminAgentServices {
   public find: RequestHandler = catchAsync(
@@ -34,6 +35,8 @@ export class AdminAgentServices {
     async (req: Request, res: Response): Promise<void> => {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
 
       const agents = await Agent.aggregate([
         {
@@ -46,11 +49,37 @@ export class AdminAgentServices {
                   $expr: {
                     $eq: ['$assignedAgent', '$$agentId'],
                   },
-                  createdAt: { $gte: today },
+                  status: { $ne: ParcelStatus.DELIVERED },
                 },
               },
               {
-                $count: 'count',
+                $facet: {
+                  todayParcels: [
+                    {
+                      $match: {
+                        createdAt: { $gte: today, $lt: tomorrow },
+                      },
+                    },
+                    {
+                      $count: 'count',
+                    },
+                  ],
+                  totalParcels: [
+                    {
+                      $count: 'count',
+                    },
+                  ],
+                },
+              },
+              {
+                $project: {
+                  todayCount: {
+                    $ifNull: [{ $arrayElemAt: ['$todayParcels.count', 0] }, 0],
+                  },
+                  totalCount: {
+                    $ifNull: [{ $arrayElemAt: ['$totalParcels.count', 0] }, 0],
+                  },
+                },
               },
             ],
             as: 'parcelInfo',
@@ -58,9 +87,7 @@ export class AdminAgentServices {
         },
         {
           $addFields: {
-            todayParcels: {
-              $ifNull: [{ $arrayElemAt: ['$parcelInfo.count', 0] }, 0],
-            },
+            parcelInfo: { $arrayElemAt: ['$parcelInfo', 0] },
           },
         },
         {
@@ -71,8 +98,12 @@ export class AdminAgentServices {
               givenName: 1,
               avatar: 1,
             },
-            todayParcels: 1,
+            todayParcels: { $ifNull: ['$parcelInfo.todayCount', 0] },
+            totalParcels: { $ifNull: ['$parcelInfo.totalCount', 0] },
           },
+        },
+        {
+          $sort: { todayParcels: 1, totalParcels: 1 },
         },
       ]);
 
@@ -80,7 +111,7 @@ export class AdminAgentServices {
         status: Status.SUCCESS,
         message: 'All agents retrieved successfully',
         data: {
-          agents: agents,
+          agents,
         },
       });
     }
