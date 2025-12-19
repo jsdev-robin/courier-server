@@ -1,5 +1,5 @@
 import express, { Router } from 'express';
-import { agentController } from '../controllers/agentController';
+import { adminAgentController } from '../controllers/agentController';
 import { adminProtect } from '../controllers/protectController';
 
 const router: Router = express.Router();
@@ -10,7 +10,7 @@ router.use(
   adminProtect.restrictTo('admin')
 );
 
-router.route('/available').get(agentController.findAvailable);
-router.route('/agents').get(agentController.find);
+router.route('/').get(adminAgentController.find);
+router.route('/available').get(adminAgentController.findAvailable);
 
 export default router;

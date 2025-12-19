@@ -1,3 +1,3 @@
-import { AgentServices } from '../services/agent/AgentServices';
+import { AdminAgentServices } from '../services/agent/AdminAgentServices';
 
-export const agentController = new AgentServices();
+export const adminAgentController = new AdminAgentServices();
