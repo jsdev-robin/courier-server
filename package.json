@@ -12,6 +12,7 @@
     "dev:store": "pnpx nx run-many --target=serve --projects=store",
     "build": "pnpx nx run-many --target=build --all",
     "prod:build": "pnpx nx run-many --target=build --configuration=production --all",
+    "prod:app:build": "pnpx nx run-many --target=build --configuration=production --projects=gateway",
     "test:build": "pnpx nx run-many -t lint test build",
     "lint": "pnpx nx run-many --target=lint --all",
     "test": "pnpx nx run-many --target=test --all",

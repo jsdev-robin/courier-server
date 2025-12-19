@@ -10,9 +10,16 @@ router.use(
   adminProtect.requireAuth,
   adminProtect.restrictTo('admin')
 );
+router.route('/near/today').get(adminParcelController.findNearestToday);
+router.route('/near').get(adminParcelController.findNearest);
 
-router.route('/near').get(adminParcelController.findNear);
+router
+  .route('/:id/auto')
+  .all(validation.id)
+  .patch(validationRequest, adminParcelController.findOneAndUpdateAssignAuto);
+
 router.route('/').get(adminParcelController.find);
+
 router
   .route('/:id')
   .all(validation.id)

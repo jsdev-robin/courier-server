@@ -17,7 +17,7 @@ export interface IParcel extends Document {
     city: string;
     state: string;
     postalCode: string;
-    locations: ICoordinates;
+    location: ICoordinates;
     contactName: string;
     contactPhone: string;
   };
