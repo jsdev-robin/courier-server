@@ -8,6 +8,7 @@ import {
   initializeRedis,
 } from './configs/initializeConnection';
 import { agentLiveLocation } from './socket/agentLiveLocation';
+import { streamAgentLocation } from './socket/streamAgentLocation';
 
 const httpServer = http.createServer(app);
 
@@ -19,12 +20,13 @@ const io = new Server(httpServer, {
   },
 });
 
-io.use((socket, next) => {
-  const cookieHeader = socket.handshake.headers.cookie;
-  if (!cookieHeader) return next(new Error('Unauthorized'));
-  next();
-});
+// io.use((socket, next) => {
+//   const cookieHeader = socket.handshake.headers.cookie;
+//   if (!cookieHeader) return next(new Error('Unauthorized'));
+//   next();
+// });
 
+streamAgentLocation(io);
 agentLiveLocation(io);
 
 io.on('connection', (socket) => {
