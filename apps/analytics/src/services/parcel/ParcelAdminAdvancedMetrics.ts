@@ -591,4 +591,329 @@ export class ParcelAdminAdvancedMetrics {
       });
     }
   );
+
+  static findProfitLossMetrics: RequestHandler = catchAsync(
+    async (req: Request, res: Response): Promise<void> => {
+      const { from, to } = req.query;
+
+      let start = new Date();
+      let end = new Date();
+
+      if (from && to) {
+        start = new Date(String(from));
+        end = new Date(String(to));
+      } else {
+        start = new Date(start.getFullYear(), start.getMonth(), 1);
+        end = new Date(start.getFullYear(), start.getMonth() + 1, 0);
+      }
+
+      start.setHours(0, 0, 0, 0);
+      end.setHours(23, 59, 59, 999);
+
+      const metrics = await Parcel.aggregate([
+        {
+          $match: {
+            createdAt: { $gte: start, $lte: end },
+          },
+        },
+        {
+          $facet: {
+            summary: [
+              {
+                $group: {
+                  _id: null,
+                  totalParcels: { $sum: 1 },
+                  deliveredRevenue: {
+                    $sum: {
+                      $cond: [
+                        { $eq: ['$status', ParcelStatus.DELIVERED] },
+                        '$payment.amount',
+                        0,
+                      ],
+                    },
+                  },
+                  failedRevenue: {
+                    $sum: {
+                      $cond: [
+                        { $eq: ['$status', ParcelStatus.FAILED] },
+                        '$payment.amount',
+                        0,
+                      ],
+                    },
+                  },
+                  deliveredParcels: {
+                    $sum: {
+                      $cond: [
+                        { $eq: ['$status', ParcelStatus.DELIVERED] },
+                        1,
+                        0,
+                      ],
+                    },
+                  },
+                  failedParcels: {
+                    $sum: {
+                      $cond: [{ $eq: ['$status', ParcelStatus.FAILED] }, 1, 0],
+                    },
+                  },
+                },
+              },
+              {
+                $project: {
+                  totalParcels: { $ifNull: ['$totalParcels', 0] },
+                  profit: {
+                    $multiply: [{ $ifNull: ['$deliveredRevenue', 0] }, 0.75],
+                  },
+                  lose: { $ifNull: ['$failedRevenue', 0] },
+                  successRate: {
+                    $cond: [
+                      { $eq: ['$totalParcels', 0] },
+                      0,
+                      {
+                        $multiply: [
+                          { $divide: ['$deliveredParcels', '$totalParcels'] },
+                          100,
+                        ],
+                      },
+                    ],
+                  },
+                },
+              },
+              {
+                $project: {
+                  totalParcels: 1,
+                  profit: { $round: ['$profit', 2] },
+                  lose: { $round: ['$lose', 2] },
+                  successRate: { $round: ['$successRate', 1] },
+                },
+              },
+            ],
+            totalParcelsTimeline: [
+              {
+                $densify: {
+                  field: 'createdAt',
+                  range: {
+                    step: 1,
+                    unit: 'day',
+                    bounds: [start, end],
+                  },
+                },
+              },
+              {
+                $project: {
+                  date: {
+                    $dateToString: {
+                      format: '%Y-%m-%d',
+                      date: '$createdAt',
+                    },
+                  },
+                },
+              },
+              {
+                $group: {
+                  _id: '$date',
+                  totalParcels: { $sum: 1 },
+                },
+              },
+              {
+                $project: {
+                  date: '$_id',
+                  totalParcels: 1,
+                  _id: 0,
+                },
+              },
+              {
+                $sort: { date: 1 },
+              },
+            ],
+            profitTimeline: [
+              {
+                $match: {
+                  status: ParcelStatus.DELIVERED,
+                },
+              },
+              {
+                $densify: {
+                  field: 'createdAt',
+                  range: {
+                    step: 1,
+                    unit: 'day',
+                    bounds: [start, end],
+                  },
+                },
+              },
+              {
+                $project: {
+                  date: {
+                    $dateToString: {
+                      format: '%Y-%m-%d',
+                      date: '$createdAt',
+                    },
+                  },
+                  amount: { $ifNull: ['$payment.amount', 0] },
+                },
+              },
+              {
+                $group: {
+                  _id: '$date',
+                  profit: {
+                    $sum: { $multiply: ['$amount', 0.75] },
+                  },
+                },
+              },
+              {
+                $project: {
+                  date: '$_id',
+                  profit: { $round: ['$profit', 2] },
+                  _id: 0,
+                },
+              },
+              {
+                $sort: { date: 1 },
+              },
+            ],
+            loseTimeline: [
+              {
+                $match: {
+                  status: ParcelStatus.FAILED,
+                },
+              },
+              {
+                $densify: {
+                  field: 'createdAt',
+                  range: {
+                    step: 1,
+                    unit: 'day',
+                    bounds: [start, end],
+                  },
+                },
+              },
+              {
+                $project: {
+                  date: {
+                    $dateToString: {
+                      format: '%Y-%m-%d',
+                      date: '$createdAt',
+                    },
+                  },
+                  amount: { $ifNull: ['$payment.amount', 0] },
+                },
+              },
+              {
+                $group: {
+                  _id: '$date',
+                  lose: { $sum: '$amount' },
+                },
+              },
+              {
+                $project: {
+                  date: '$_id',
+                  lose: { $round: ['$lose', 2] },
+                  _id: 0,
+                },
+              },
+              {
+                $sort: { date: 1 },
+              },
+            ],
+            successRateTimeline: [
+              {
+                $densify: {
+                  field: 'createdAt',
+                  range: {
+                    step: 1,
+                    unit: 'day',
+                    bounds: [start, end],
+                  },
+                },
+              },
+              {
+                $project: {
+                  date: {
+                    $dateToString: {
+                      format: '%Y-%m-%d',
+                      date: '$createdAt',
+                    },
+                  },
+                  status: '$status',
+                },
+              },
+              {
+                $group: {
+                  _id: '$date',
+                  totalParcels: { $sum: 1 },
+                  deliveredParcels: {
+                    $sum: {
+                      $cond: [
+                        { $eq: ['$status', ParcelStatus.DELIVERED] },
+                        1,
+                        0,
+                      ],
+                    },
+                  },
+                },
+              },
+              {
+                $project: {
+                  date: '$_id',
+                  successRate: {
+                    $cond: [
+                      { $eq: ['$totalParcels', 0] },
+                      0,
+                      {
+                        $round: [
+                          {
+                            $multiply: [
+                              {
+                                $divide: ['$deliveredParcels', '$totalParcels'],
+                              },
+                              100,
+                            ],
+                          },
+                          1,
+                        ],
+                      },
+                    ],
+                  },
+                  _id: 0,
+                },
+              },
+              {
+                $sort: { date: 1 },
+              },
+            ],
+          },
+        },
+        {
+          $project: {
+            summary: { $arrayElemAt: ['$summary', 0] },
+            totalParcelsTimeline: '$totalParcelsTimeline',
+            profitTimeline: '$profitTimeline',
+            loseTimeline: '$loseTimeline',
+            successRateTimeline: '$successRateTimeline',
+          },
+        },
+      ]);
+
+      const result = metrics[0] || {
+        summary: {
+          totalParcels: 0,
+          profit: 0,
+          lose: 0,
+          successRate: 0,
+        },
+        totalParcelsTimeline: [],
+        profitTimeline: [],
+        loseTimeline: [],
+        successRateTimeline: [],
+      };
+
+      res.status(HttpStatusCode.OK).json({
+        status: Status.SUCCESS,
+        message: 'Profit/loss metrics retrieved successfully',
+        data: {
+          metrics: result,
+        },
+      });
+    }
+  );
 }

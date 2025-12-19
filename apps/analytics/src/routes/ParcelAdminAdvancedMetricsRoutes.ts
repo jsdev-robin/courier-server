@@ -23,4 +23,8 @@ router
   .route('/profit/monthly')
   .get(ParcelAdminAdvancedMetrics.findProfitLossMonthlyMetrics);
 
+router
+  .route('/profit/lose')
+  .get(ParcelAdminAdvancedMetrics.findProfitLossMetrics);
+
 export default router;
