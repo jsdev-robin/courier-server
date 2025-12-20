@@ -103,7 +103,7 @@
     }
   },
   "dependencies": {
-    "@server/cloud": "workspace:^",
+    "@server/cloud": "workspace:*",
     "@server/emails": "workspace:*",
     "@server/features": "workspace:*",
     "@server/middlewares": "workspace:*",

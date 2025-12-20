@@ -34,7 +34,7 @@ router.post(
 
 router.post(
   '/authentication/finish',
-  adminAuthController.finishAuthentication(config.AGENT_CLIENT_URL),
+  adminAuthController.finishAuthentication(config.ADMIN_CLIENT_URL),
   adminAuthController.createSession
 );
 
@@ -43,7 +43,7 @@ router.post(
   '/password/reset/start',
   authValidations.isEmail,
   validationRequest,
-  adminAuthController.startPasswordReset(config.AGENT_CLIENT_URL)
+  adminAuthController.startPasswordReset(config.ADMIN_CLIENT_URL)
 );
 router.patch(
   '/password/reset/finish/:token',
@@ -105,7 +105,7 @@ router.post(
   '/registration/finish',
   authValidations.finishRegistration,
   validationRequest,
-  adminAuthController.finishRegistration(config.AGENT_CLIENT_URL)
+  adminAuthController.finishRegistration(config.ADMIN_CLIENT_URL)
 );
 
 // Passkeys
@@ -150,7 +150,7 @@ router.post(
   authValidations.startEmailChange,
   validationRequest,
   adminAuthController.startEmailChange(
-    `${config.AGENT_CLIENT_URL}/account/workflow/sessions/email-change`
+    `${config.ADMIN_CLIENT_URL}/account/workflow/sessions/email-change`
   )
 );
 router.patch(
