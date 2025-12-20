@@ -25,7 +25,7 @@ export async function agentLiveLocation(io: Server) {
 
   ns.on('connection', async (socket) => {
     const decoded = verifyToken(socket.handshake.headers.cookie);
-    const agentsCollection = mongoose.connection.collection('agents');
+    const agentsCollection = await mongoose.connection.collection('agents');
 
     if (!decoded || !decoded.id) {
       socket.disconnect(true);
@@ -36,8 +36,6 @@ export async function agentLiveLocation(io: Server) {
       'agentLiveLocation',
       async (data: { longitude: number; latitude: number }) => {
         if (data) {
-          console.log(data);
-
           socket.emit(decoded?.id, data);
 
           await nodeClient.geoAdd(`agent/location`, {

@@ -4,7 +4,7 @@ import { Parcel } from '../models/parcel/ParcelModel';
 export async function streamAgentToAdmin(io: Server) {
   const ns = io.of('/stream/agentToAdmin');
 
-  const changeStream = Parcel.watch();
+  const changeStream = await Parcel.watch();
 
   changeStream.on('change', (change) => {
     if (change.operationType === 'update') {

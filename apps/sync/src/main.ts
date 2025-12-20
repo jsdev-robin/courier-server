@@ -8,6 +8,7 @@ import {
   initializeRedis,
 } from './configs/initializeConnection';
 import { agentLiveLocation } from './socket/agentLiveLocation';
+import { locationSharingRoom } from './socket/locationSharingRoom';
 import { streamAdminToAgent } from './socket/streamAdminToAgent';
 import { streamAgentLocation } from './socket/streamAgentLocation';
 import { streamAgentToAdmin } from './socket/streamAgentToAdmin';
@@ -34,6 +35,7 @@ agentLiveLocation(io);
 streamUserToAdmin(io);
 streamAdminToAgent(io);
 streamAgentToAdmin(io);
+locationSharingRoom(io);
 
 io.on('connection', (socket) => {
   console.log('A user connected:', socket.id);
