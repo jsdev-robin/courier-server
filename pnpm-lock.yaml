@@ -463,7 +463,7 @@ importers:
   apps/parcel:
     dependencies:
       '@server/cloud':
-        specifier: workspace:^
+        specifier: workspace:*
         version: link:../../libs/cloud
       '@server/emails':
         specifier: workspace:*
