@@ -10,38 +10,34 @@ export async function streamAgentLocation(io: Server) {
     socket.on(
       'agentLocationStream',
       async (data: {
-        position: { lat: number; lng: number };
+        location: { longitude: number; latitude: number };
         speed: number;
-        member: string;
+        agent: {
+          id: string;
+          fullName?: string;
+          email?: string;
+          phone?: string;
+          avatar: {
+            url: string;
+          };
+        };
       }) => {
         if (data) {
           await nodeClient.hSet(
             'agents:locations',
-            data.member,
+            data.agent.id,
             JSON.stringify(data)
           );
 
           const all = await nodeClient.hGetAll('agents:locations');
 
-          console.log(Object.values(all).map((v) => JSON.parse(v)));
-
           ns.emit(
             'allAgents',
             Object.values(all).map((v) => JSON.parse(v))
           );
-
-          ns.to(data.member).emit(data?.member, data);
         }
       }
     );
-
-    socket.on('joinAgentRoom', (agentId: string) => {
-      socket.join(agentId);
-    });
-
-    socket.on('joinAdminRoom', (agentId: string) => {
-      socket.join(agentId);
-    });
 
     socket.on('disconnect', () => {});
   });

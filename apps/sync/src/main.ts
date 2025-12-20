@@ -23,11 +23,11 @@ const io = new Server(httpServer, {
   },
 });
 
-// io.use((socket, next) => {
-//   const cookieHeader = socket.handshake.headers.cookie;
-//   if (!cookieHeader) return next(new Error('Unauthorized'));
-//   next();
-// });
+io.use((socket, next) => {
+  const cookieHeader = socket.handshake.headers.cookie;
+  if (!cookieHeader) return next(new Error('Unauthorized'));
+  next();
+});
 
 streamAgentLocation(io);
 agentLiveLocation(io);
