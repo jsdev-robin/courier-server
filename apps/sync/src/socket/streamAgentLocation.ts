@@ -3,6 +3,8 @@ import { Server } from 'socket.io';
 
 export async function streamAgentLocation(io: Server) {
   const ns = io.of('/agent/stream/location');
+  const redisSubscriber = nodeClient.duplicate();
+  await redisSubscriber.connect();
 
   ns.on('connection', async (socket) => {
     socket.on(
@@ -16,13 +18,12 @@ export async function streamAgentLocation(io: Server) {
           await nodeClient.hSet(
             'agents:locations',
             data.member,
-            JSON.stringify({
-              ...data,
-              updatedAt: Date.now(),
-            })
+            JSON.stringify(data)
           );
 
           const all = await nodeClient.hGetAll('agents:locations');
+
+          console.log(Object.values(all).map((v) => JSON.parse(v)));
 
           ns.emit(
             'allAgents',
