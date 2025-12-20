@@ -8,7 +8,6 @@ export async function streamAdminToAgent(io: Server) {
 
   changeStream.on('change', (change) => {
     if (change.operationType === 'update') {
-      console.log(change.fullDocument);
       if (change.updateDescription.updatedFields.status === 'Assigned') {
         if (change.fullDocument.assignedAgent) {
           ns.emit(
