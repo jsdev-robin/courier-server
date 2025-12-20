@@ -16,7 +16,7 @@
           "format": [
             "cjs"
           ],
-          "bundle": false,
+          "bundle": true,
           "main": "apps/sync/src/main.ts",
           "tsConfig": "apps/sync/tsconfig.app.json",
           "assets": [
@@ -105,10 +105,10 @@
   "dependencies": {
     "@server/cloud": "workspace:^",
     "@server/middlewares": "workspace:*",
-    "@server/protect": "workspace:*",
-    "@server/utils": "workspace:*",
-    "@server/types": "workspace:*",
     "@server/models": "workspace:*",
+    "@server/protect": "workspace:*",
+    "@server/types": "workspace:*",
+    "@server/utils": "workspace:*",
     "@upstash/redis": "^1.35.7",
     "body-parser": "^2.2.1",
     "cookie-parser": "^1.4.7",
@@ -119,7 +119,8 @@
     "mongoose": "^8.20.0",
     "morgan": "^1.10.1",
     "redis": "^5.10.0",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "tslib": "^2.3.0"
   },
   "devDependencies": {
     "@types/body-parser": "^1.19.6",

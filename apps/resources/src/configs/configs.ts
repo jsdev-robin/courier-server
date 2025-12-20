@@ -1,11 +1,8 @@
 import dotenv from 'dotenv';
+import path from 'path';
 import { ProcessEnv } from './types/index.js';
 
-dotenv.config({
-  path: './.env',
-  quiet: true,
-  debug: process.env.DEBUG === 'true',
-});
+dotenv.config({ path: path.resolve(process.cwd(), '.env'), quiet: true });
 
 const requiredVars: Array<keyof ProcessEnv> = [
   'NODE_ENV',

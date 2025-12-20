@@ -16,7 +16,7 @@
           "format": [
             "cjs"
           ],
-          "bundle": false,
+          "bundle": true,
           "main": "apps/resources/src/main.ts",
           "tsConfig": "apps/resources/tsconfig.app.json",
           "assets": [
@@ -105,14 +105,15 @@
   "dependencies": {
     "@server/cloud": "workspace:^",
     "@server/emails": "workspace:*",
+    "@server/features": "workspace:*",
     "@server/middlewares": "workspace:*",
+    "@server/models": "workspace:*",
     "@server/protect": "workspace:*",
     "@server/types": "workspace:*",
     "@server/utils": "workspace:*",
     "@server/validations": "workspace:*",
-    "@server/models": "workspace:*",
-    "@server/features": "workspace:*",
     "@upstash/redis": "^1.35.7",
+    "axios": "^1.6.0",
     "body-parser": "^2.2.1",
     "bwip-js": "^4.8.0",
     "cookie-parser": "^1.4.7",
@@ -129,7 +130,8 @@
     "qrcode": "^1.5.4",
     "qs": "^6.14.0",
     "redis": "^5.10.0",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "tslib": "^2.3.0"
   },
   "devDependencies": {
     "@types/body-parser": "^1.19.6",

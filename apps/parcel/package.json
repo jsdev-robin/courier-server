@@ -16,7 +16,7 @@
           "format": [
             "cjs"
           ],
-          "bundle": false,
+          "bundle": true,
           "main": "apps/parcel/src/main.ts",
           "tsConfig": "apps/parcel/tsconfig.app.json",
           "assets": [
@@ -129,7 +129,8 @@
     "qrcode": "^1.5.4",
     "qs": "^6.14.0",
     "redis": "^5.10.0",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "tslib": "^2.3.0"
   },
   "devDependencies": {
     "@types/body-parser": "^1.19.6",
