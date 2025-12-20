@@ -20,6 +20,9 @@ router
 router
   .route('metrics/agents')
   .get(parcelAdminController.findTopPerformingAgentsMetrics);
+router
+  .route('/metrics/locations/today')
+  .get(parcelAdminController.findMapMetricsToday);
 router.route('/metrics/locations').get(parcelAdminController.findMapMetrics);
 router.route('/metrics/revenue').get(parcelAdminController.findRevenueMetrics);
 router.route('/metrics/status').get(parcelAdminController.findStatusMetrics);

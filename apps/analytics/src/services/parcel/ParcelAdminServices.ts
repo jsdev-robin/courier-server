@@ -828,7 +828,7 @@ export class ParcelAdminServices {
     }
   );
 
-  public findMapMetrics: RequestHandler = catchAsync(
+  public findMapMetricsToday: RequestHandler = catchAsync(
     async (req: Request, res: Response): Promise<void> => {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
@@ -839,6 +839,74 @@ export class ParcelAdminServices {
         {
           $match: {
             createdAt: { $gte: today, $lt: tomorrow },
+            status: { $ne: ParcelStatus.DELIVERED },
+          },
+        },
+        {
+          $project: {
+            trackingNumber: 1,
+            name: '$deliveryAddress.city',
+            status: '$status',
+            coordinates: {
+              $cond: {
+                if: {
+                  $and: [
+                    { $isArray: '$deliveryAddress.location.coordinates' },
+                    {
+                      $eq: [
+                        { $size: '$deliveryAddress.location.coordinates' },
+                        2,
+                      ],
+                    },
+                  ],
+                },
+                then: '$deliveryAddress.location.coordinates',
+                else: null,
+              },
+            },
+            deliveryAddress: {
+              street: '$deliveryAddress.street',
+              city: '$deliveryAddress.city',
+              state: '$deliveryAddress.state',
+              country: '$deliveryAddress.country',
+              postalCode: '$deliveryAddress.postalCode',
+              contactName: '$deliveryAddress.contactName',
+              contactPhone: '$deliveryAddress.contactPhone',
+            },
+          },
+        },
+        {
+          $match: {
+            coordinates: { $ne: null },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            trackingNumber: 1,
+            name: 1,
+            status: 1,
+            coordinates: 1,
+            deliveryAddress: 1,
+          },
+        },
+      ]);
+
+      res.status(HttpStatusCode.OK).json({
+        status: Status.SUCCESS,
+        message: 'Map distribution data retrieved successfully',
+        data: {
+          metrics,
+        },
+      });
+    }
+  );
+
+  public findMapMetrics: RequestHandler = catchAsync(
+    async (req: Request, res: Response): Promise<void> => {
+      const metrics = await Parcel.aggregate([
+        {
+          $match: {
             status: { $ne: ParcelStatus.DELIVERED },
           },
         },
