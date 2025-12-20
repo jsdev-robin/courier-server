@@ -169,18 +169,5 @@ router.post(
     `${config.AGENT_CLIENT_URL}/account/workflow/sessions/email-change`
   )
 );
-router.patch(
-  '/email/change/finish/:token',
-  authValidations.finishEmailChange,
-  validationRequest,
-  agentAuthController.finishEmailChange
-);
-
-router.patch(
-  '/disconnect/oauth',
-  authValidations.disconnectOauth,
-  validationRequest,
-  agentAuthController.disconnectOauth
-);
 
 export default router;

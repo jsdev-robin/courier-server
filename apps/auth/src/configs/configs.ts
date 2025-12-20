@@ -88,7 +88,7 @@ validateEnv(env);
 
 const defaults: Partial<ProcessEnv> = {
   NODE_ENV: 'development',
-  AUTH_PORT: '8002',
+  AUTH_PORT: '8082',
 };
 
 const config: ProcessEnv & { ISPRODUCTION: boolean; DB: string } = {

@@ -16,7 +16,7 @@
           "format": [
             "cjs"
           ],
-          "bundle": false,
+          "bundle": true,
           "main": "apps/auth/src/main.ts",
           "tsConfig": "apps/auth/tsconfig.app.json",
           "assets": [

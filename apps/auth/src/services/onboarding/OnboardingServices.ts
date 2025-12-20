@@ -3,7 +3,6 @@ import { SendEmail } from '@server/emails';
 import { ApiError } from '@server/middlewares';
 import { catchAsync, HttpStatusCode, Status } from '@server/utils';
 import { NextFunction, Request, RequestHandler, Response } from 'express';
-import { config } from '../../configs/configs';
 import { Agent } from '../../models/users/agentModel';
 
 export class OnboardingServices {
@@ -33,9 +32,7 @@ export class OnboardingServices {
         user: {
           email,
         },
-        origin: config.ISPRODUCTION
-          ? 'https://www.devmun.xyz/agent/create'
-          : 'http://localhost:3000/agent/create',
+        origin: 'https://agent-courier.devmun.xyz/sign-up',
       };
 
       await new SendEmail(mailData)
@@ -78,7 +75,7 @@ export class OnboardingServices {
         );
       }
 
-      next();
+      return next();
     }
   );
 }
