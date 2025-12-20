@@ -21,9 +21,9 @@ function verifyToken(cookies: string | undefined) {
 }
 
 export async function agentLiveLocation(io: Server) {
-  const nameSpace = io.of('/agent/location');
+  const ns = io.of('/agent/location');
 
-  nameSpace.on('connection', async (socket) => {
+  ns.on('connection', async (socket) => {
     const decoded = verifyToken(socket.handshake.headers.cookie);
     const agentsCollection = mongoose.connection.collection('agents');
 

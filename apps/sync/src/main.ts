@@ -8,7 +8,10 @@ import {
   initializeRedis,
 } from './configs/initializeConnection';
 import { agentLiveLocation } from './socket/agentLiveLocation';
+import { streamAdminToAgent } from './socket/streamAdminToAgent';
 import { streamAgentLocation } from './socket/streamAgentLocation';
+import { streamAgentToAdmin } from './socket/streamAgentToAdmin';
+import { streamUserToAdmin } from './socket/streamUserToAdmin';
 
 const httpServer = http.createServer(app);
 
@@ -28,6 +31,9 @@ const io = new Server(httpServer, {
 
 streamAgentLocation(io);
 agentLiveLocation(io);
+streamUserToAdmin(io);
+streamAdminToAgent(io);
+streamAgentToAdmin(io);
 
 io.on('connection', (socket) => {
   console.log('A user connected:', socket.id);

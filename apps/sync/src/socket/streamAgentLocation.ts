@@ -1,9 +1,10 @@
+import { nodeClient } from '@server/cloud';
 import { Server } from 'socket.io';
 
 export async function streamAgentLocation(io: Server) {
-  const nameSpace = io.of('/agent/stream/location');
+  const ns = io.of('/agent/stream/location');
 
-  nameSpace.on('connection', async (socket) => {
+  ns.on('connection', async (socket) => {
     socket.on(
       'agentLocationStream',
       async (data: {
@@ -12,7 +13,23 @@ export async function streamAgentLocation(io: Server) {
         member: string;
       }) => {
         if (data) {
-          nameSpace.to(data.member).emit(data?.member, data);
+          await nodeClient.hSet(
+            'agents:locations',
+            data.member,
+            JSON.stringify({
+              ...data,
+              updatedAt: Date.now(),
+            })
+          );
+
+          const all = await nodeClient.hGetAll('agents:locations');
+
+          ns.emit(
+            'allAgents',
+            Object.values(all).map((v) => JSON.parse(v))
+          );
+
+          ns.to(data.member).emit(data?.member, data);
         }
       }
     );
