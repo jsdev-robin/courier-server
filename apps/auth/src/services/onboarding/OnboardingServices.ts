@@ -32,7 +32,7 @@ export class OnboardingServices {
         user: {
           email,
         },
-        origin: 'https://agent-courier.devmun.xyz/sign-up',
+        origin: 'http://localhost:3001/sign-up',
       };
 
       await new SendEmail(mailData)
